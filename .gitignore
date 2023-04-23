@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 .DS_Store
+logs
 
 ### application yml properties 
 application-*.yml

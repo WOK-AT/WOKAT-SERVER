@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="warn" packages="org.apache.logging.log4j.core,io.sentry.log4j2">
+
+
+    <!--    해당 설정파일에서 사용하는 프로퍼티-->
+    <Properties>
+        <Property name="logDir">/var/log</Property>
+        <Property name="logNm">${logDir}/logs/log</Property>
+        <Property name="errorNm">${logDir}/logs/error</Property>
+        <Property name="consolePattern">%style{%d{yyyy/MM/dd HH:mm:ss,SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue}  [%C] %style{[%t]}{yellow} - %m%n</Property>
+        <Property name="rollingFilePattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
+
+    <!--    LogEvent를 전달해주는 Appender-->
+    <Appenders>
+
+        <Console name="Console_Appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePattern}"/>
+        </Console>
+
+        <!-- 로그 파일 저장 -->
+        <RollingFile name="Log_File_Appender" 
+                    fileName="${logNm}/log.${date:yyyy-MM-dd-HH:mm:ss}.log" 
+                    filePattern="${logNm}/archive/log.${date:yyyy-MM-dd-HH:mm:ss}.log.gz">
+            <PatternLayout pattern="${rollingFilePattern}"/>
+            <Policies>
+                <CronTriggeringPolicy>
+                    <schedule>0 0 */6 * * ?</schedule>   <!-- 6시간 단위 압축파일 생성 -->
+                </CronTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="max" max="10" compressionLevel="6">
+                <Delete basePath="${logNm}" maxDepth="1">
+                    <IfFileName glob="${logNm}/*.log" />
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!-- 에러 파일 저장 -->
+        <RollingFile name ="Error_File_Appender"  
+                    fileName="${errorNm}/error.${date:yyyy-MM-dd-HH:mm:ss}.log" 
+                    filePattern="${errorNm}/archive/error.${date:yyyy-MM-dd-HH:mm:ss}.log.gz">
+            <PatternLayout pattern="${rollingFilePattern}"/>
+            <Policies>
+                <CronTriggeringPolicy>
+                    <schedule>0 0 */6 * * ?</schedule>  <!-- 6시간 단위 압축파일 생성 -->
+                </CronTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="max" max="10" compressionLevel="6">
+                <Delete basePath="${errorNm}" maxDepth="1">
+                    <IfFileName glob="${errorNm}/*.log" />
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    
+    </Appenders>
+
+
+    <!--  실제 Logger-->
+    <Loggers>
+
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console_Appender" level="debug"/>
+            <AppenderRef ref="Log_File_Appender" level="info"/>
+            <AppenderRef ref="Error_File_Appender" level="error"/>
+        </Logger>
+
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" level="debug"/>
+            <AppenderRef ref="Log_File_Appender" level="info"/>
+            <AppenderRef ref="Error_File_Appender" level="error"/>
+        </Root>
+
+    </Loggers>
+
+
+</Configuration>
