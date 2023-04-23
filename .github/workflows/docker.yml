@@ -82,7 +82,7 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             docker run -v /home/ubuntu:/var/log -d -p 8080:8080 --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            docker rmi -f $(docker images -f "dangling=true" -q)
+          # docker rmi -f $(docker images -f "dangling=true" -q)
 
       ## time
   current-time:
