@@ -14,9 +14,11 @@ public class logFileTest {
     @Test
     void logInfoTest() {
 
-        LOGGER.info("✨로그 테스트✨");
-        LOGGER.error("✨로그 테스트✨");
-        
+        String logTest = "✨로그 테스트✨";
+
+        LOGGER.info("log = {}", logTest);
+        LOGGER.error("error = {}", logTest);
+
     }
     
 }

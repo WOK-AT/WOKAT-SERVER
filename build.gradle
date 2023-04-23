@@ -12,6 +12,11 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+
+	all {
+			all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+			all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
+	}
 }
 
 repositories {
@@ -22,6 +27,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	// implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	// postgreSQL DB 
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// log4j2
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'

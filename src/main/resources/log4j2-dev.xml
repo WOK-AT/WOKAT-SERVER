@@ -58,7 +58,7 @@
     <!--  실제 Logger-->
     <Loggers>
 
-        <Logger name="sopterm.maro.example" additivity="false">
+        <Logger name="com.sopt.wokat" additivity="false">
             <AppenderRef ref="Console_Appender" level="debug"/>
             <AppenderRef ref="Log_File_Appender" level="info"/>
             <AppenderRef ref="Error_File_Appender" level="error"/>
