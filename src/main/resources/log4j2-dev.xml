@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" packages="org.apache.logging.log4j.core,io.sentry.log4j2">
+
+    <!--    해당 설정파일에서 사용하는 프로퍼티-->
+    <Properties>
+        <Property name="logNm">log</Property>
+        <Property name="errorNm">error</Property>
+        <Property name="consolePattern">%style{%d{yyyy/MM/dd HH:mm:ss,SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue}  [%C] %style{[%t]}{yellow} - %m%n</Property>
+        <Property name="rollingFilePattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
+
+    <!--    LogEvent를 전달해주는 Appender-->
+    <Appenders>
+
+        <Console name="Console_Appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePattern}"/>
+        </Console>
+
+        <!-- 로그 파일 저장 -->
+        <RollingFile name="Log_File_Appender" 
+                    fileName="example/logs/log/${logNm}.${date:yyyy-MM-dd}.log" 
+                    filePattern="example/logs/log/${logNm}.${date:yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${rollingFilePattern}"/>
+            <Policies>
+                <CronTriggeringPolicy>
+                    <schedule>0 0 0 * * ?</schedule>   <!-- 하루 단위 압축파일 생성 -->
+                </CronTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="max" max="10" compressionLevel="6">
+                <Delete basePath="logs/log" maxDepth="1">
+                    <IfFileName glob="*/log/*.log" />
+                    <IfLastModified age="2d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!-- 에러 파일 저장 -->
+        <RollingFile name ="Error_File_Appender"  
+                    fileName="example/logs/error/${errorNm}.${date:yyyy-MM-dd}.log" 
+                    filePattern="example/logs/error/${errorNm}.${date:yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${rollingFilePattern}"/>
+            <Policies>
+                <CronTriggeringPolicy>
+                    <schedule>0 0 0 * * ?</schedule>  <!-- 하루 단위 압축파일 생성 -->
+                </CronTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="max" max="10" compressionLevel="6">
+                <Delete basePath="logs/error" maxDepth="1">
+                    <IfFileName glob="*/error/*.log" />
+                    <IfLastModified age="2d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+    </Appenders>
+
+    <!--  실제 Logger-->
+    <Loggers>
+
+        <Logger name="sopterm.maro.example" additivity="false">
+            <AppenderRef ref="Console_Appender" level="debug"/>
+            <AppenderRef ref="Log_File_Appender" level="info"/>
+            <AppenderRef ref="Error_File_Appender" level="error"/>
+        </Logger>
+
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" level="debug"/>
+            <AppenderRef ref="Log_File_Appender" level="info"/>
+            <AppenderRef ref="Error_File_Appender" level="error"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>
