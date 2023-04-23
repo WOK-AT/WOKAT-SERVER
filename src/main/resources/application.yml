@@ -1,0 +1,48 @@
+server:
+    port: 8080
+    servlet:
+        encoding:
+            charset: UTF-8
+            force: true
+
+spring:
+    # 로컬, 서버 프로필 설정 
+    profiles:
+        active: dev   
+        group:
+            dev: 
+                - site-dev 
+                - db-dev
+            prod: 
+                - site-prod 
+                - db-prod
+        include: 
+            - database 
+            - site
+            - jwt
+            - oauth
+
+    jpa:
+        properties:
+            hibernate:
+                format-sql: true
+                use_sql_comments: true
+        show-sql: true
+
+
+# Swagger springdoc-ui Configuration
+springdoc:
+    default-consumes-media-type: application/json;charset=UTF-8
+    default-produces-media-type: application/json;charset=UTF-8
+    swagger-ui:
+        path: /swagger-ui.html            
+        tags-sorter: alpha            
+        operations-sorter: method      
+        disable-swagger-default-url: true
+        display-request-duration: true
+    api-docs:
+        enabled: true
+    cache:
+        disabled: true
+
+    
