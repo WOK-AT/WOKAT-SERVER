@@ -1,18 +1,28 @@
 package com.sopt.wokat.domain.user.entity;
 
-import java.util.*;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import com.sopt.wokat.global.entity.BaseEntity;
 
-@EqualsAndHashCode(callSuper=false)
-@Entity @Data
-// @AllArgsConstructor @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name= "users")
+@Data
+@Document("user")
 @Schema(description = "유저 테이블")
 public class User extends BaseEntity {
+    
+    private String userId;
+    private String userPw;
+
+    @Builder
+    public User(String userId, String userPw) {
+
+        this.userId = userId;
+        this.userPw = userPw;
+        
+    }
 
 }
+
+
