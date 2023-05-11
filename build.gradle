@@ -40,6 +40,11 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
 
+	// aws
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	//file
+	implementation 'commons-io:commons-io:2.6'
 
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 	
