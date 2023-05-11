@@ -21,6 +21,7 @@ spring:
             - site
             - jwt
             - oauth
+            - aws
 
     jpa:
         properties:
