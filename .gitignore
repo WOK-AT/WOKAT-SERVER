@@ -7,6 +7,7 @@ build/
 
 .DS_Store
 logs
+temp.png
 
 ### application yml properties 
 application-*.yml
