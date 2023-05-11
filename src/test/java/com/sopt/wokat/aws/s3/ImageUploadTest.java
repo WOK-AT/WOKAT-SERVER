@@ -3,7 +3,6 @@ package com.sopt.wokat.aws.s3;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -13,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.sopt.wokat.infra.aws.S3ProfileImageUploader;
 
 @SpringBootTest
@@ -25,7 +23,7 @@ public class ImageUploadTest {
     @Test
     public void imageDownAndUpload() throws IOException {
         //! 이미지 다운로드
-        String imageURL = "https://wokat-default-image.s3.ap-northeast-2.amazonaws.com/default-profileImage.png";
+        String imageURL = "https://wokat-default-image.s3.ap-northeast-2.amazonaws.com/test.png";
         String fileName = "temp.png";
 
         File downloadedFile = s3ProfileImageUploader.downloadImage(imageURL, fileName);

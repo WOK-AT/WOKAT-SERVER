@@ -33,6 +33,7 @@ public class S3ProfileImageUploader {
     @Value("${cloud.aws.s3.buckets.bucket1}")
     public String bucket;
 
+	//! 객체 업로드 
     public String uploadObject(MultipartFile multipartFile, String storedFileName) throws IOException {
 		String filePath = "kakao/" + storedFileName;
 
@@ -44,10 +45,12 @@ public class S3ProfileImageUploader {
 		return amazonS3Client.getUrl(bucket, filePath).toString();
 	}
 
+	//! 객체 삭제
 	public void deleteObject(String storedFileName) throws AmazonServiceException {
 		amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, "kakao/" + storedFileName));
 	}
 
+	//! URL로부터 이미지 다운로드
     public File downloadImage(String imageUrl, String fileName) {
 		try {
 			URL url = new URL(imageUrl);
