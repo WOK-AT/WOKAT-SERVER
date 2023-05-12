@@ -1,5 +1,5 @@
 package com.sopt.wokat.domain.member.repository;
 
-public class MemberRepositoryCustom {
+public interface MemberRepositoryCustom {
     
 }
