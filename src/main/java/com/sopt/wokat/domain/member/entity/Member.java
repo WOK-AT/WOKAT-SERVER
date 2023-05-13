@@ -29,8 +29,8 @@ public class Member extends BaseEntity {
         this.memberProfile = memberProfile;
     }
 
-    public static Member createMember(String nickName, String userEmail, String provider, String providerId) {
-        MemberProfile profile = MemberProfile.createProfile(nickName, userEmail, provider, providerId);
+    public static Member createMember(String nickName, String profileImage, String userEmail, String provider, String providerId) {
+        MemberProfile profile = MemberProfile.createProfile(nickName, profileImage, userEmail, provider, providerId);
 
         Member member = Member.builder()
                             .memberProfile(profile)

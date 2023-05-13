@@ -23,8 +23,10 @@ import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
+import com.sopt.wokat.domain.member.oauth.OauthAttributes;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.config.redis.RedisUtil;
+import com.sopt.wokat.global.util.JwtUtil;
 
 //import com.sopt.wokat.global.config.security.provider.Oauth2MemberInfo;
 
@@ -40,7 +42,7 @@ public class OauthService {
 
     private final InMemoryClientRegistrationRepository inMemoryRepository;
     private final MemberRepository memberRepository;
-    //private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
     
     /**
@@ -50,24 +52,32 @@ public class OauthService {
      * 유저 인증 후 Jwt AccessToken, Refresh Token 생성
      * RefreshToken Redis 저장 만료기간 1달
      */
-    /* 
+    
     @Transactional
     public LoginResponse login(AuthorizationRequest authorizationRequest) {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(authorizationRequest.getProviderName());
-        LOGGER.info("tokenResponse = {}", tokenResponse);
-
         Member member = getMemberProfile(authorizationRequest, provider);
 
     }
-    */
-/* 
+    
     private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
         OauthTokenResponse token = getToken(authorizationRequest, provider);
         Map<String, Object> userAttributes = getUserAttributes(provider, token);
-        Member extract = 
+        Member extract = OauthAttributes.extract(authorizationRequest.getProviderName(), userAttributes);
+
+        return saveOrUpdate(extract);
     }
-*/
-    //! 카카오 서버로 토큰 요청 
+
+    //! 저장, 변경 메소드 
+    //! To-D update
+    private Member saveOrUpdate(Member member) {
+        Member findMember = memberRepository.findByOauthID(member.getMemberProfile().getProviderId());
+        if (findMember == null) findMember = memberRepository.save(member);
+
+        return findMember;
+    }
+
+    //* 카카오 서버로 토큰 요청 
     private OauthTokenResponse getToken(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
         return WebClient.create()
                     .post()
@@ -92,7 +102,7 @@ public class OauthService {
         return formData;
     }
 
-    //! 카카오 서버에서 유저 정보 가져오기 
+    //* 카카오 서버에서 유저 정보 가져오기 
     private Map<String, Object> getUserAttributes(ClientRegistration provider, OauthTokenResponse tokenResponse) {
         return WebClient.create()
                     .get()

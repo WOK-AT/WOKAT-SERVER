@@ -1,6 +1,5 @@
 package com.sopt.wokat.mongoDB;
 
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,12 +1,14 @@
 package com.sopt.wokat.domain.member.entity;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Transient;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mongodb.lang.Nullable;
-import com.sopt.wokat.global.entity.BaseEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -44,7 +46,7 @@ public class MemberProfile {
     private String providerId;
 
     @Builder
-    public MemberProfile(String nickName, String profileImage, String userEmail, String provider, String providerId) {
+    public MemberProfile(String nickName,String profileImage, String userEmail, String provider, String providerId) {
         this.nickName = nickName;
         this.profileImage = profileImage;
         this.userEmail = userEmail;
@@ -53,15 +55,14 @@ public class MemberProfile {
     }
 
     //! 생성 메소드
-    public static MemberProfile createProfile(String nickName, String userEmail, String provider, String providerId) {
+    public static MemberProfile createProfile(String nickName, String profileImage, String userEmail, String provider, String providerId) {
         return MemberProfile.builder()
                 .nickName(nickName)
+                .profileImage(profileImage)
                 .userEmail(userEmail)
                 .provider(provider)
                 .providerId(providerId)
                 .build();
     }
-
-    
 
 }

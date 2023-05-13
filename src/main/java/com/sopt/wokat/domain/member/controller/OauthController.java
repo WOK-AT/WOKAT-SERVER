@@ -30,7 +30,7 @@ public class OauthController {
 
     private final OauthService oauthService;
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    /* 
+    
     @Operation(summary = "카카오", description = "카카오 회원가입 및 간편로그인을 진행합닌다.", tags = {"Kakao"})
     @GetMapping(value="/{provider}")
     public ResponseEntity<ResultResponse> kakaoLogin(@PathVariable String provider, 
@@ -42,6 +42,6 @@ public class OauthController {
                 oauthService.login(new AuthorizationRequest(provider, code)));
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
-    */
+    
 
 }
