@@ -1,5 +1,7 @@
 package com.sopt.wokat.domain.member.entity;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -12,12 +14,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "MemberProfile")
 @Schema(description = "Member_Profile 테이블")
 public class MemberProfile {
+
+    @Id
+    @Schema(description = "Member Profile 고유 ID")
+    private String id;
     
     @Field("user_name")
     @Schema(description = "유저 닉네임")
@@ -46,14 +53,15 @@ public class MemberProfile {
     }
 
     //! 생성 메소드
-    public static MemberProfile createProfile(String nickName, String profileImage, String userEmail, String provider, String providerId) {
+    public static MemberProfile createProfile(String nickName, String userEmail, String provider, String providerId) {
         return MemberProfile.builder()
                 .nickName(nickName)
-                .profileImage(profileImage)
                 .userEmail(userEmail)
                 .provider(provider)
                 .providerId(providerId)
                 .build();
     }
+
+    
 
 }

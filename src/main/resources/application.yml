@@ -13,9 +13,11 @@ spring:
             dev: 
                 - site-dev 
                 - db-dev
+                - oauth-dev
             prod: 
                 - site-prod 
                 - db-prod
+                - oauth-prod
         include: 
             - database 
             - site

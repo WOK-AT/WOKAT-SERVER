@@ -19,11 +19,14 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
 import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
-import com.sopt.wokat.global.config.security.provider.Oauth2MemberInfo;
+import com.sopt.wokat.global.config.redis.RedisUtil;
+
+//import com.sopt.wokat.global.config.security.provider.Oauth2MemberInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,20 +40,35 @@ public class OauthService {
 
     private final InMemoryClientRegistrationRepository inMemoryRepository;
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    //private final JwtTokenProvider jwtTokenProvider;
+    private final RedisUtil redisUtil;
     
+    /**
+     * @InMemoryRepository application-oauth properties 정보를 담고 있음
+     * @getToken() 넘겨받은 code 로 Oauth 서버에 Token 요청
+     * @getUserProfile 첫 로그인 시 회원가입
+     * 유저 인증 후 Jwt AccessToken, Refresh Token 생성
+     * RefreshToken Redis 저장 만료기간 1달
+     */
+    /* 
     @Transactional
-    public LoginResponse login(String providerName, String code){
-        ClientRegistration provider = inMemoryRepository.findByRegistrationId(providerName);
-        OauthTokenResponse tokenResponse = getToken(code, provider);
+    public LoginResponse login(AuthorizationRequest authorizationRequest) {
+        ClientRegistration provider = inMemoryRepository.findByRegistrationId(authorizationRequest.getProviderName());
         LOGGER.info("tokenResponse = {}", tokenResponse);
 
-        Member member = 
+        Member member = getMemberProfile(authorizationRequest, provider);
 
     }
-
+    */
+/* 
+    private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
+        OauthTokenResponse token = getToken(authorizationRequest, provider);
+        Map<String, Object> userAttributes = getUserAttributes(provider, token);
+        Member extract = 
+    }
+*/
     //! 카카오 서버로 토큰 요청 
-    private OauthTokenResponse getToken(String code, ClientRegistration provider) {
+    private OauthTokenResponse getToken(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
         return WebClient.create()
                     .post()
                     .uri(provider.getProviderDetails().getTokenUri())
@@ -58,25 +76,20 @@ public class OauthService {
                         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                         header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                     })
-                    .bodyValue(tokenRequest(code, provider))
+                    .bodyValue(tokenRequest(authorizationRequest, provider))
                     .retrieve()
                     .bodyToMono(OauthTokenResponse.class)
                     .block();
     }
 
-    private MultiValueMap<String, String> tokenRequest(String code, ClientRegistration provider) {
+    private MultiValueMap<String, String> tokenRequest(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("code", code);
+        formData.add("code", authorizationRequest.getCode());
         formData.add("grant_type", "authorization_code");
         formData.add("redirect_uri", provider.getRedirectUri());
         formData.add("client_secret", provider.getClientSecret());
         formData.add("client_id", provider.getClientId());
         return formData;
-    }
-
-    private Member getMemberProfile(String providerName, OauthTokenResponse tokenResponse, ClientRegistration provider) {
-        Map<String, Object> userAttributes = getUserAttributes(provider, tokenResponse);
-        Oauth2MemberInfo oauth2MemberInfo = 
     }
 
     //! 카카오 서버에서 유저 정보 가져오기 
