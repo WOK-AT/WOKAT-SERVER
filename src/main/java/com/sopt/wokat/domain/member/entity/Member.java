@@ -2,11 +2,14 @@ package com.sopt.wokat.domain.member.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.entity.BaseEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,9 +38,7 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    public static Member createMember(String nickName, String profileImage, String userEmail, String provider, String providerId, Role role) {
-        MemberProfile profile = MemberProfile.createProfile(nickName, profileImage, userEmail, provider, providerId);
-
+    public static Member createMember(MemberProfile profile, Role role) {
         Member member = Member.builder()
                             .memberProfile(profile)
                             .role(role)

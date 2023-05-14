@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,7 @@ public class MemberProfile {
 
     @Id
     @Schema(description = "Member Profile 고유 ID")
-    private String id;
+    private ObjectId id;
     
     @Field("user_name")
     @Schema(description = "유저 닉네임")
@@ -46,7 +47,8 @@ public class MemberProfile {
     private String providerId;
 
     @Builder
-    public MemberProfile(String nickName,String profileImage, String userEmail, String provider, String providerId) {
+    public MemberProfile(ObjectId id, String nickName,String profileImage, String userEmail, String provider, String providerId) {
+        this.id = id;
         this.nickName = nickName;
         this.profileImage = profileImage;
         this.userEmail = userEmail;
@@ -55,14 +57,17 @@ public class MemberProfile {
     }
 
     //! 생성 메소드
-    public static MemberProfile createProfile(String nickName, String profileImage, String userEmail, String provider, String providerId) {
-        return MemberProfile.builder()
-                .nickName(nickName)
-                .profileImage(profileImage)
-                .userEmail(userEmail)
-                .provider(provider)
-                .providerId(providerId)
-                .build();
+    public static MemberProfile createProfile(ObjectId id, String nickName, String profileImage, String userEmail, String provider, String providerId) {
+        MemberProfile profile =  MemberProfile.builder()
+                        .id(id)
+                        .nickName(nickName)
+                        .profileImage(profileImage)
+                        .userEmail(userEmail)
+                        .provider(provider)
+                        .providerId(providerId)
+                        .build();
+        
+        return profile;
     }
 
 }

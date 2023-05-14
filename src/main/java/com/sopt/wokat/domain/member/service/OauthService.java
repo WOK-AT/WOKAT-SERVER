@@ -12,8 +12,10 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -22,14 +24,17 @@ import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
 import com.sopt.wokat.domain.member.dto.JwtDTO;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
+import com.sopt.wokat.domain.member.dto.MemberProfileQueryDTO;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
+import com.sopt.wokat.domain.member.entity.MemberProfile;
+import com.sopt.wokat.domain.member.exception.MemberNotFoundException;
 import com.sopt.wokat.domain.member.oauth.OauthAttributes;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.config.redis.RedisUtil;
-import com.sopt.wokat.global.util.JwtUtil;
-
-//import com.sopt.wokat.global.config.security.provider.Oauth2MemberInfo;
+import com.sopt.wokat.global.config.security.provider.KakaoUserInfo;
+import com.sopt.wokat.global.entity.Token;
+import com.sopt.wokat.global.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,9 +46,12 @@ public class OauthService {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     private static final String AUTHORIZATION_TYPE = "Bearer";
 
+    @Autowired
+    private final MongoTemplate mongoTemplate;
+
     private final InMemoryClientRegistrationRepository inMemoryRepository;
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RedisUtil redisUtil;
     
     /**
@@ -59,23 +67,44 @@ public class OauthService {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(authorizationRequest.getProviderName());
         Member member = getMemberProfile(authorizationRequest, provider);
 
-        final JwtDTO jwtDTO = jwtUtil.generateJwtDTO(member);
+        Token accessToken = jwtTokenProvider.createAccessToken(String.valueOf(member.getId()));
+        Token refreshToken = jwtTokenProvider.createRefreshToken();
+
+        LOGGER.info("access = {}", accessToken.getValue());
+        LOGGER.info("refresh = {}", refreshToken.getValue());
+
+        redisUtil.setDataExpire(String.valueOf(member.getId()), refreshToken.getValue(), refreshToken.getExpiredTime());
+        
+        boolean validateMember = validateProfileSaveMember(member.getId());
+
+        return LoginResponse.builder()
+                .id(member.getId())
+                .nickName(member.getMemberProfile().getNickName())
+                .profileImage(member.getMemberProfile().getProfileImage())
+                .userEmail(member.getMemberProfile().getUserEmail())
+                .tokenType(AUTHORIZATION_TYPE)
+                .accessToken(accessToken.getValue())
+                .refreshToken(refreshToken.getValue())
+                .profileSaveUser(validateMember)
+                .build();
     }
     
     private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
         OauthTokenResponse token = getToken(authorizationRequest, provider);
         Map<String, Object> userAttributes = getUserAttributes(provider, token);
+        
         Member extract = OauthAttributes.extract(authorizationRequest.getProviderName(), userAttributes);
 
         return saveOrUpdate(extract);
     }
 
     //! 저장, 변경 메소드 
-    //! To-D update
+    //! To-DO update
     private Member saveOrUpdate(Member member) {
         Member findMember = memberRepository.findByOauthID(member.getMemberProfile().getProviderId());
-        if (findMember == null) findMember = memberRepository.save(member);
-
+        if (findMember == null) {
+            findMember = memberRepository.save(member);
+        }
         return findMember;
     }
 
@@ -113,6 +142,18 @@ public class OauthService {
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block();
+    }
+
+    private boolean validateProfileSaveMember(String id) {
+        MemberProfileQueryDTO findMember = memberRepository.findMemberProfileById(id)
+            .orElseThrow(() -> new MemberNotFoundException());
+
+        if (findMember.getNickName() == null || 
+            findMember.getProfileImage() == null ||
+            findMember.getUserEmail() == null) {
+            return false;
+        } 
+        return true;
     }
 
 }

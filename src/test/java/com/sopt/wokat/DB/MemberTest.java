@@ -1,5 +1,6 @@
-package com.sopt.wokat.mongoDB;
+package com.sopt.wokat.DB;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ public class MemberTest {
     @Test
     public void insertTest() {
         MemberProfile profile = MemberProfile.builder()
+                            .id(new ObjectId())
                             .nickName("TestMember")
                             .profileImage(null)
                             .userEmail("test@naver.com")
@@ -37,7 +39,7 @@ public class MemberTest {
         mongoTemplate.save(member);
 
         //! Member 삭제
-        String memberProfileId = profile.getId();
+        String memberProfileId = profile.getId().toString();
         String memberId = member.getId();        
 
         Query profileQuery = new Query(Criteria.where("_id").is(memberProfileId));

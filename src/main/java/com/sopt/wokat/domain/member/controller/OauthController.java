@@ -36,7 +36,7 @@ public class OauthController {
     public ResponseEntity<ResultResponse> kakaoLogin(@PathVariable String provider, 
                                                         @RequestParam String code) {
         ResultResponse response;
-        LOGGER.info(code);
+        LOGGER.info("code = {}", code);
 
         response = ResultResponse.of(ResultCode.LOGIN_SUCCESS, 
                 oauthService.login(new AuthorizationRequest(provider, code)));

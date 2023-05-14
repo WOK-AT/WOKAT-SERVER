@@ -1,5 +1,7 @@
 package com.sopt.wokat.global.error;
 
+import org.apache.http.HttpStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -25,9 +27,13 @@ public enum ErrorCode {
 	ENTITY_TYPE_INVALID(500, "G007", "올바르지 않은 entity type 입니다."),
     
     //! JWT
-    JWT_INVALID(40, "J001", "유효하지 않은 토큰입니다."),
-    JWT_EXPIRED(410, "J002", "만료된 토큰입니다."),
-    EXPIRED_REFRESH_TOKEN(401, "J003", "만료된 Refresh 토큰입니다. 재로그인이 필요합니다."),
+    UNAUTHORIZED_USER(401, "J001","로그인이 필요합니다."),
+    FORBIDDEN_USER(401, "J002", "권한이 없는 요청입니다"),
+    UNAUTHORIZED_ACCESS_TOKEN(401, "J003", "유효하지 않은 Access Token입니다."),
+    UNAUTHORIZED_REFRESH_TOKEN(401, "J004", "유효하지 않은 Refresh Token입니다."),
+    
+    //! Member
+    MEMBER_NOT_FOUND(400, "M001","유저를 찾을 수 없습니다."),
 
     ;
 

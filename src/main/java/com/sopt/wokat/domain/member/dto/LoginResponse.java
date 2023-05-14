@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse {
 
-    private Long id;
+    private String id;
     private String nickName;
     private String profileImage;
     private String userEmail;
@@ -18,7 +18,7 @@ public class LoginResponse {
     boolean ProfileSaveUser;
 
     @Builder
-    public LoginResponse(Long id, String nickName, String profileImage, String userEmail, String tokenType, String accessToken, String refreshToken, boolean profileSaveUser) {
+    public LoginResponse(String id, String nickName, String profileImage, String userEmail, String tokenType, String accessToken, String refreshToken, boolean profileSaveUser) {
         this.id = id;
         this.nickName = nickName;
         this.profileImage = profileImage;
