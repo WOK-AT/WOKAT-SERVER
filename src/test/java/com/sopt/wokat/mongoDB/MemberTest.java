@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.entity.MemberProfile;
+import com.sopt.wokat.domain.member.entity.Role;
 
 @SpringBootTest
 public class MemberTest {
@@ -28,6 +29,7 @@ public class MemberTest {
         
         Member member = Member.builder()
                             .memberProfile(profile)
+                            .role(Role.ROLE_MEMBER)
                             .build(); 
 
         //! Member 저장

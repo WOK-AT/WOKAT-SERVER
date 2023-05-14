@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
+import com.sopt.wokat.domain.member.dto.JwtDTO;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
@@ -58,6 +59,7 @@ public class OauthService {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(authorizationRequest.getProviderName());
         Member member = getMemberProfile(authorizationRequest, provider);
 
+        final JwtDTO jwtDTO = jwtUtil.generateJwtDTO(member);
     }
     
     private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) {

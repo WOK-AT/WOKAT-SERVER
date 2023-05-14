@@ -22,18 +22,25 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity {
 
     @DBRef(lazy = true)
+    @Schema(description = "유저 프로필 세부정보")
     private MemberProfile memberProfile;
 
+    @Field("role")
+    @Schema(description = "유저 ROLE")
+    private Role role;
+
     @Builder
-    public Member(MemberProfile memberProfile) {
+    public Member(MemberProfile memberProfile, Role role) {
         this.memberProfile = memberProfile;
+        this.role = role;
     }
 
-    public static Member createMember(String nickName, String profileImage, String userEmail, String provider, String providerId) {
+    public static Member createMember(String nickName, String profileImage, String userEmail, String provider, String providerId, Role role) {
         MemberProfile profile = MemberProfile.createProfile(nickName, profileImage, userEmail, provider, providerId);
 
         Member member = Member.builder()
                             .memberProfile(profile)
+                            .role(role)
                             .build();
         return member;
     }

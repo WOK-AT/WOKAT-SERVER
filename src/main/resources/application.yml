@@ -21,7 +21,6 @@ spring:
         include: 
             - database 
             - site
-            - jwt
             - oauth
             - aws
 
