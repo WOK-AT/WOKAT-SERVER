@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
                 LoginMember loginMember = authService.findMemberByAccessToken(accessToken);
-
+                System.out.println(loginMember);
                 MemberAuthentication authentication = new MemberAuthentication(loginMember.getId());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -21,6 +21,12 @@ public class AuthService {
     private final RedisUtil redisUtil;
     private final MemberService memberService;
 
+    //! Access Token 유효성 확인
+    public void validateAccessToken(String accessToken) {
+        accessTokenExtractor(accessToken);
+    }
+
+    //! Access Token으로 회원 조회 
     @Transactional(readOnly = true) 
     public LoginMember findMemberByAccessToken(String accessToken) {
         if (!accessToken.isEmpty()) {

@@ -46,9 +46,6 @@ public class OauthService {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     private static final String AUTHORIZATION_TYPE = "Bearer";
 
-    @Autowired
-    private final MongoTemplate mongoTemplate;
-
     private final InMemoryClientRegistrationRepository inMemoryRepository;
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
