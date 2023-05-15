@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.entity.MemberProfile;
 import com.sopt.wokat.domain.member.entity.Role;
-import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.config.security.provider.KakaoUserInfo;
 
 public enum OauthAttributes {

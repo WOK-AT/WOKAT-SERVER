@@ -70,9 +70,6 @@ public class OauthService {
         Token accessToken = jwtTokenProvider.createAccessToken(String.valueOf(member.getId()));
         Token refreshToken = jwtTokenProvider.createRefreshToken();
 
-        LOGGER.info("access = {}", accessToken.getValue());
-        LOGGER.info("refresh = {}", refreshToken.getValue());
-
         redisUtil.setDataExpire(String.valueOf(member.getId()), refreshToken.getValue(), refreshToken.getExpiredTime());
         
         boolean validateMember = validateProfileSaveMember(member.getId());
@@ -102,7 +99,9 @@ public class OauthService {
     //! To-DO update
     private Member saveOrUpdate(Member member) {
         Member findMember = memberRepository.findByOauthID(member.getMemberProfile().getProviderId());
+        
         if (findMember == null) {
+            memberRepository.saveMemberProfile(member.getMemberProfile());
             findMember = memberRepository.save(member);
         }
         return findMember;

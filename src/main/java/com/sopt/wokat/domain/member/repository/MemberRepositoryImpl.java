@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.sopt.wokat.domain.member.dto.MemberProfileQueryDTO;
 import com.sopt.wokat.domain.member.entity.Member;
+import com.sopt.wokat.domain.member.entity.MemberProfile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,10 +27,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     
     @Override
     public Member findByOauthID(String providerId) {
-        LOGGER.info("providerId = {}", providerId);
-
         Aggregation aggregation = Aggregation.newAggregation(
-            Aggregation.lookup("MemberProfile", "memberProfile", "_id", "memberProfile"),
+            Aggregation.lookup("MemberProfile", "memberProfile.id", "id", "memberProfile"),
             Aggregation.unwind("memberProfile"),
             Aggregation.match(Criteria.where("memberProfile.providerId").is(providerId))
         );
@@ -61,6 +60,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         } else {
             return Optional.of(results.get(0));
         }
+    }
+
+    @Override
+    public void saveMemberProfile(MemberProfile memberProfile) {
+        mongoTemplate.save(memberProfile);
     }
     
 }
