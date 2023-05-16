@@ -40,11 +40,10 @@ jobs:
       - name: make application-*.yml
         run: |
           cd ./src/main/resources
-          touch ./application-database.yml ./application-site.yml ./application-oauth.yml ./application-jwt.yml ./application-aws.yml
+          touch ./application-database.yml ./application-site.yml ./application-oauth.yml ./application-aws.yml
           echo "${{ secrets.DATABASE_YML }}" > ./application-database.yml
           echo "${{ secrets.SITE_YML }}" > ./application-site.yml
           echo "${{ secrets.OAUTH_YML }}" > ./application-oauth.yml
-          echo "${{ secrets.JWT_YML }}" > ./application-jwt.yml
           echo "${{ secrets.AWS_YML }}" > ./application-aws.yml
         shell: bash
 

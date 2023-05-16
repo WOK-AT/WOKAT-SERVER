@@ -15,11 +15,11 @@ import lombok.*;
 @Data
 @Document(collation = "base_entity")
 @Schema(description = "기본 컬럼")
+@AllArgsConstructor @NoArgsConstructor
 public class BaseEntity {
     
     @Id
-    @Field("_id")
-    @Schema(description = "유저 고유 ID")
+    @Schema(description = "고유 ID")
     private String id;
 
     @CreatedDate
@@ -31,5 +31,5 @@ public class BaseEntity {
     @Field("updated_at")
     @Schema(description = "업데이트 일자")
     private LocalDateTime updatedAt;
-
+    
 }

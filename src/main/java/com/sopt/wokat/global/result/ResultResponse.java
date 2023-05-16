@@ -1,5 +1,8 @@
 package com.sopt.wokat.global.result;
 
+import lombok.Getter;
+
+@Getter
 public class ResultResponse {
     
     private int status;
