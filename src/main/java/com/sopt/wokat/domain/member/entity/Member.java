@@ -24,6 +24,10 @@ public class Member extends BaseEntity {
     @Schema(description = "유저 프로필 세부정보")
     private MemberProfile memberProfile;
 
+    @DBRef(lazy = true)
+    @Schema(description = "유저 프로필 이미지")
+    private ProfileImage profileImage;
+
     @Field("role")
     @Schema(description = "유저 ROLE")
     private Role role;

@@ -4,9 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
+import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.entity.MemberProfile;
 import com.sopt.wokat.domain.member.entity.Role;
@@ -16,22 +15,22 @@ public enum OauthAttributes {
     KAKAO("kakao") {
 
         @Override
-        public Member of(Map<String, Object> attributes) {
+        public OauthResponse of(Map<String, Object> attributes) {
             KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
 
             MemberProfile profile = MemberProfile.createProfile(
                 new ObjectId(),
                 kakaoUserInfo.getNickName(),
-                kakaoUserInfo.getProfileImage(),
                 kakaoUserInfo.getUserEmail(),
                 kakaoUserInfo.getProvider(),
                 kakaoUserInfo.getProviderId()
             );
 
-            return Member.createMember(
-                profile,
-                Role.ROLE_MEMBER
+            OauthResponse response = new OauthResponse(
+                Member.createMember(profile, Role.ROLE_MEMBER), kakaoUserInfo.getProfileImage()
             );
+
+            return response;
         }
     };
 
@@ -41,7 +40,7 @@ public enum OauthAttributes {
         this.providerName = providerName;
     }
 
-    public static Member extract(String providerName, Map<String, Object> memberAttributes) {
+    public static OauthResponse extract(String providerName, Map<String, Object> memberAttributes) {
         return Arrays.stream(values())
                 .filter(provider -> providerName.equals(provider.providerName))
                 .findFirst()
@@ -50,5 +49,5 @@ public enum OauthAttributes {
     }
 
 
-    public abstract Member of(Map<String, Object> attributes);
+    public abstract OauthResponse of(Map<String, Object> attributes);
 }

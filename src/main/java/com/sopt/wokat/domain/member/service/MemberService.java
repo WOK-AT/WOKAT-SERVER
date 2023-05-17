@@ -33,7 +33,7 @@ public class MemberService {
         return MemberResponse.builder()
                 .id(findMember.getId())
                 .nickName(findMember.getMemberProfile().getNickName())
-                .profileImage(findMember.getMemberProfile().getProfileImage())
+                .profileImage(findMember.getProfileImage().getS3URL())
                 .userEmail(findMember.getMemberProfile().getUserEmail())
                 .build();
     }

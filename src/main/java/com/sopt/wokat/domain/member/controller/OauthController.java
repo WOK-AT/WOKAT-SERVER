@@ -1,5 +1,7 @@
 package com.sopt.wokat.domain.member.controller;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,7 @@ public class OauthController {
     @Operation(summary = "카카오", description = "카카오 회원가입 및 간편로그인을 진행합닌다.", tags = {"Kakao"})
     @GetMapping(value="/{provider}")
     public ResponseEntity<ResultResponse> kakaoLogin(@PathVariable String provider, 
-                                                        @RequestParam String code) {
+                                                        @RequestParam String code) throws IOException {
         ResultResponse response;
 
         response = ResultResponse.of(ResultCode.LOGIN_SUCCESS, 
