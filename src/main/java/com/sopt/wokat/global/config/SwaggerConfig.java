@@ -10,11 +10,11 @@ import org.springframework.context.annotation.*;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "✨WORKAT Swagger✨",
+                title = "✨WOKAT Swagger✨",
                 version = "v1.0.0",
-                description = "SOPT - WORKAT SERVER ",
+                description = "SOPT - WOKAT SERVER ",
                 contact = @Contact(
-                        name = "WORKAT Github",
+                        name = "WOKAT Github",
                         url = "https://github.com/Maro-SOPT/server"
                 )
         ),
