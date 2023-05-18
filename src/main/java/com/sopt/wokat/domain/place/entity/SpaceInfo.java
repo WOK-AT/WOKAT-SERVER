@@ -55,7 +55,7 @@ public class SpaceInfo {
 
     @Field("space_time") @Nullable
     @Schema(description = "운영 시간")
-    private Map<String, Object> openTime;
+    private Map<String, Object> openTime;  //! [요일: 운영시간]
 
     @Field("space_contact") @Nullable
     @Schema(description = "전화번호")
@@ -63,7 +63,7 @@ public class SpaceInfo {
 
     @Field("space_wifi") @Nullable
     @Schema(description = "와이파이 ID/PW")
-    private Map<String, Object> wifi;
+    private Map<String, Object> wifi;      //! [ID: 아이디, PW: 비밀번호] 
 
     @Field("space_socket") @Nullable
     @Schema(description = "콘센트 정보")
@@ -91,10 +91,10 @@ public class SpaceInfo {
 
     @Field("space_hashTag") @Nullable
     @Schema(description = "해쉬태그")
-    private List<String> hashTags;
+    private List<String> hashTags; 
 
     @Field("space_distance") @Nullable
     @Schema(description = "도보거리")
-    private Map<String, Object> distance;
+    private Map<String, Object> distance;   //! [역이름: 도보거리]
 
 }
