@@ -6,6 +6,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -25,9 +26,11 @@ import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
 import com.sopt.wokat.domain.member.dto.JwtDTO;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
 import com.sopt.wokat.domain.member.dto.MemberProfileQueryDTO;
+import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.entity.MemberProfile;
+import com.sopt.wokat.domain.member.entity.ProfileImage;
 import com.sopt.wokat.domain.member.exception.MemberNotFoundException;
 import com.sopt.wokat.domain.member.oauth.OauthAttributes;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
@@ -52,6 +55,7 @@ public class OauthService {
     private final RedisUtil redisUtil;
     
     /**
+     * @throws IOException
      * @InMemoryRepository application-oauth properties 정보를 담고 있음
      * @getToken() 넘겨받은 code 로 Oauth 서버에 Token 요청
      * @getUserProfile 첫 로그인 시 회원가입
@@ -60,7 +64,7 @@ public class OauthService {
      */
     
     @Transactional
-    public LoginResponse login(AuthorizationRequest authorizationRequest) {
+    public LoginResponse login(AuthorizationRequest authorizationRequest) throws IOException {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(authorizationRequest.getProviderName());
         Member member = getMemberProfile(authorizationRequest, provider);
 
@@ -70,11 +74,11 @@ public class OauthService {
         redisUtil.setDataExpire(String.valueOf(member.getId()), refreshToken.getValue(), refreshToken.getExpiredTime());
         
         boolean validateMember = validateProfileSaveMember(member.getId());
-
+        
         return LoginResponse.builder()
                 .id(member.getId())
                 .nickName(member.getMemberProfile().getNickName())
-                .profileImage(member.getMemberProfile().getProfileImage())
+                .profileImage(member.getProfileImage().getS3URL())
                 .userEmail(member.getMemberProfile().getUserEmail())
                 .tokenType(AUTHORIZATION_TYPE)
                 .accessToken(accessToken.getValue())
@@ -83,24 +87,37 @@ public class OauthService {
                 .build();
     }
     
-    private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) {
+    private Member getMemberProfile(AuthorizationRequest authorizationRequest, ClientRegistration provider) throws IOException {
         OauthTokenResponse token = getToken(authorizationRequest, provider);
         Map<String, Object> userAttributes = getUserAttributes(provider, token);
         
-        Member extract = OauthAttributes.extract(authorizationRequest.getProviderName(), userAttributes);
+        OauthResponse extract = OauthAttributes.extract(authorizationRequest.getProviderName(), userAttributes);
 
         return saveOrUpdate(extract);
     }
 
     //! 저장, 변경 메소드 
     //! To-DO update
-    private Member saveOrUpdate(Member member) {
-        Member findMember = memberRepository.findByOauthID(member.getMemberProfile().getProviderId());
-        
+    private Member saveOrUpdate(OauthResponse member) throws IOException {
+        Member findMember = memberRepository.findByOauthID(member.getMember().getMemberProfile().getProviderId());
+
         if (findMember == null) {
-            memberRepository.saveMemberProfile(member.getMemberProfile());
-            findMember = memberRepository.save(member);
+            ProfileImage profileImage = memberRepository.saveMemberProfileImage(member.getOauthURL());
+            memberRepository.saveMemberProfile(member.getMember().getMemberProfile());
+            
+            //! 유저에 프로필 이미지 저장 
+            member.getMember().setProfileImage(profileImage);
+            findMember = memberRepository.save(member.getMember());
         }
+        //! 저장된 oauthurl과 다르면 s3에 저장하고 업데이트
+        else if (!findMember.getProfileImage().getOauthURL().equals(member.getOauthURL())) {
+            //* 새로운 프로필 이미지 저장 
+            ProfileImage profileImage = memberRepository.saveMemberProfileImage(member.getOauthURL());
+            //* 유저 이미지 업데이트
+            Member updatedMember = memberRepository.updateProfileImage(findMember, profileImage);
+            memberRepository.save(updatedMember);
+        }
+        
         return findMember;
     }
 

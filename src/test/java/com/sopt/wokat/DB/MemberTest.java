@@ -23,7 +23,6 @@ public class MemberTest {
         MemberProfile profile = MemberProfile.builder()
                             .id(new ObjectId())
                             .nickName("TestMember")
-                            .profileImage(null)
                             .userEmail("test@naver.com")
                             .provider("kakao")
                             .providerId("test")
