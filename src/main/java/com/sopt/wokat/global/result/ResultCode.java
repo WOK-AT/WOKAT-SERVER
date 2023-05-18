@@ -17,9 +17,10 @@ public enum ResultCode {
     
     // User
     REGISTER_SUCCESS(200, "M001", "회원가입 되었습니다."),
-    LOGIN_SUCCESS(200, "M002", "로그인 되었습니다."),
-    REFRESH_SUCCESS(200, "M003", "재발급 되었습니다."),
-    LOGOUT_SUCCESS(200, "M004", "로그아웃 되었습니다."),
+    LOGIN_SUCCESS(200, "M002", "로그인에 성공했습니다."),
+    LOGIN_FAIL(500, "M003", "로그인에 실패했습니다."),
+    REFRESH_SUCCESS(200, "M004", "재발급 되었습니다."),
+    LOGOUT_SUCCESS(200, "M005", "로그아웃 되었습니다."),
 
     ;
 
