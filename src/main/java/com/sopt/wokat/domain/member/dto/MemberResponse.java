@@ -1,11 +1,13 @@
 package com.sopt.wokat.domain.member.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Hidden
 public class MemberResponse {
     
     private String id;
