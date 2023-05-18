@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class SecurityUtil {
     
     public static String getCurrentMemberId() {
-        MemberAuthentication memberAuthentication = (MemberAuthentication) SecurityContextHolder.getContext().getAuthentication();;
+        MemberAuthentication memberAuthentication = (MemberAuthentication) SecurityContextHolder.getContext().getAuthentication();
         return memberAuthentication.getMemberId();
     }
     

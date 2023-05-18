@@ -1,7 +1,5 @@
 package com.sopt.wokat.domain.place.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,7 +67,7 @@ public class PlaceController {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
-                    placeService.findPlaceInfo());
+                    placeService.findPlaceInfo(placeId));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
         }
