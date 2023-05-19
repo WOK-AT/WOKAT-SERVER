@@ -3,98 +3,106 @@ package com.sopt.wokat.domain.place.entity;
 import java.util.List;
 import java.util.Map;
 
+import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.mongodb.lang.Nullable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.util.BsonUtils;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "SpaceInfo")
 @Schema(description = "공간 정보 테이블")
+@Builder
 public class SpaceInfo {
 
-    @Field("space_class")
+    @MongoId
+    private ObjectId id;
+
+    @Field("공간 분류")
     @Schema(description = "공간 분류")
     private Space space;
 
-    @Field("space_area")
+    @Field("지역")
     @Schema(description = "지역")
     private String area;
 
-    @Field("homepage_url") @Nullable
+    @Field("홈페이지 주소") @Nullable
     @Schema(description = "홈페이지 주소")
     private String homepageURL;
     
-    @Field("space_name")
+    @Field("무료 공간명")
     @Schema(description = "공간명")
     private String name;
 
-    @Field("space_charge") @Nullable
+    @Field("유/무료 체크 확인") @Nullable
     @Schema(description = "유/무료")
     private Boolean isFree;
 
-    @Field("space_reserve") @Nullable
+    @Field("예약 필수 여부") @Nullable
     @Schema(description = "예약 필수 여부")
-    private Boolean isRequiredReserve;
+    private String isRequiredReserve;
 
-    @Field("space_introduce") @Nullable
+    @Field("공간소개") @Nullable
     @Schema(description = "공간 소개")
     private List<String> introduction;
 
-    @Field("space_image") @Nullable
+    @Field("공간 사진") @Nullable
     @Schema(description = "공간 사진")
     private List<String> image;
 
-    @Field("space_time") @Nullable
+    @Field("운영 시간") @Nullable
     @Schema(description = "운영 시간")
-    private Map<String, Object> openTime;  //! [요일: 운영시간]
+    //private Map<String, Object> openTime;  //! [요일: 운영시간]
+    private String openTime;
 
-    @Field("space_contact") @Nullable
+    @Field("전화번호") @Nullable
     @Schema(description = "전화번호")
     private List<String> contact;
 
-    @Field("space_wifi") @Nullable
+    @Field("WIFI ID / PW") @Nullable
     @Schema(description = "와이파이 ID/PW")
-    private Map<String, Object> wifi;      //! [ID: 아이디, PW: 비밀번호] 
+    //private Map<String, Object> wifi;      //! [ID: 아이디, PW: 비밀번호]
+    private String wifi;
 
-    @Field("space_socket") @Nullable
+    @Field("콘센트") @Nullable
     @Schema(description = "콘센트 정보")
     private String socket;
 
-    @Field("space_parking") @Nullable
+    @Field("주차공간 여부") @Nullable
     @Schema(description = "주차공간 정보")
     private String parkingLot;
 
-    @Field("space_hdmi_screen") @Nullable
+    @Field("HDMI/스크린 여부") @Nullable
     @Schema(description = "HDMI/스크린 정보")
-    private Boolean hdmiScreen;
+    private String hdmiScreen;
 
-    @Field("space_roadName") @Nullable
+    @Field("공간 도로명 주소") @Nullable
     @Schema(description = "도로명 주소")
     private String locationRoadName;
 
-    @Field("space_") @Nullable
+    @Field("공간 지번 주소") @Nullable
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
-    @Field("space_headCount") @Nullable
+    @Field("최대 수용 인원") @Nullable
     @Schema(description = "수용 인원수")
     private String headCount;
 
-    @Field("space_hashTag") @Nullable
+    @Field("해쉬태그") @Nullable
     @Schema(description = "해쉬태그")
     private List<String> hashTags; 
 
-    @Field("space_distance") @Nullable
+    @Field("지하철역에서 도보 몇분 ") @Nullable
     @Schema(description = "도보거리")
-    private Map<String, Object> distance;   //! [역이름: 도보거리]
+//    private Map<String, Object> distance;   //! [역이름: 도보거리]
+    private String distance;
+
 
 }

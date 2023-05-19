@@ -56,12 +56,16 @@ dependencies {
 	implementation 'commons-io:commons-io:2.6'
 
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
-	
+	testImplementation 'junit:junit:4.13.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	//added
+	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
 }
 
 tasks.named('test') {
