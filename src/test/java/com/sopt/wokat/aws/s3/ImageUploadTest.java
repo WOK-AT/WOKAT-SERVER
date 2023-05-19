@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sopt.wokat.domain.member.dto.ProfileImageUploadDTO;
-import com.sopt.wokat.infra.aws.DownlaodFileS3Uploader;
+import com.sopt.wokat.infra.aws.S3ProfileUploader;
 
 @SpringBootTest
 public class ImageUploadTest {
     
     @Autowired
-    private DownlaodFileS3Uploader downlaodFileS3Uploader;
+    private S3ProfileUploader downlaodFileS3Uploader;
 
     @Test
     public void imageDownAndUpload() throws IOException {

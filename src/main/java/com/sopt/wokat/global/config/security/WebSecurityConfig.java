@@ -47,7 +47,8 @@ public class WebSecurityConfig {
     };
 
     private static final String[] AUTH_WHITELIST = {
-        "/member/login/**"
+        "/member/login/**",
+        "/place"
     };
 
     @Bean
