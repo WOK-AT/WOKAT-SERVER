@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 public class OauthResponse {
     
     private Member member;
-    private String oauthURL;
+    private String oauthProfileImageURL;
 
     @Builder
-    public OauthResponse(Member member, String oauthURL) {
+    public OauthResponse(Member member, String oauthProfileImageURL) {
         this.member = member;
-        this.oauthURL = oauthURL;
+        this.oauthProfileImageURL = oauthProfileImageURL;
     }
 
 }
