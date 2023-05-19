@@ -7,7 +7,6 @@ import org.bson.types.ObjectId;
 
 import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.entity.Member;
-import com.sopt.wokat.domain.member.entity.MemberProfile;
 import com.sopt.wokat.domain.member.entity.Role;
 import com.sopt.wokat.global.config.security.provider.KakaoUserInfo;
 
@@ -18,8 +17,7 @@ public enum OauthAttributes {
         public OauthResponse of(Map<String, Object> attributes) {
             KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
 
-            MemberProfile profile = MemberProfile.createProfile(
-                new ObjectId(),
+            Member member = Member.createMember(
                 kakaoUserInfo.getNickName(),
                 kakaoUserInfo.getUserEmail(),
                 kakaoUserInfo.getProvider(),
@@ -27,7 +25,7 @@ public enum OauthAttributes {
             );
 
             OauthResponse response = new OauthResponse(
-                Member.createMember(profile, Role.ROLE_MEMBER), kakaoUserInfo.getProfileImage()
+                member, kakaoUserInfo.getProfileImage()
             );
 
             return response;
