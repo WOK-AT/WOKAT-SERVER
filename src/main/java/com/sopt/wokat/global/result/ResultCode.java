@@ -22,6 +22,10 @@ public enum ResultCode {
     REFRESH_SUCCESS(200, "M004", "재발급 되었습니다."),
     LOGOUT_SUCCESS(200, "M005", "로그아웃 되었습니다."),
 
+    // Place
+    POST_PLACE_SUCCESS(200, "P001", "장소 등록에 성공했습니다."),
+    POST_PLACE_FAIL(500, "P002", "장소 등록에 실패했습니다."),
+
     ;
 
     private final int status;

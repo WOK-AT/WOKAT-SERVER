@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,13 +44,33 @@ public class PlaceController {
         @RequestParam(required = true) String filter,
         @RequestParam(required = false) String date,
         @RequestParam(required = false) String person
-    ){
+    ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
                     placeService.filteringPlace());
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
+        }
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+    }
+
+    @Operation(
+        summary = "장소 등록", 
+        description = "장소를 등록하는 API입니다.", 
+        tags = {"Place"},
+        parameters = {
+            @RequestPart(name = "placeImage", description = "장소 이미지", in = ParameterIn., example = "안국역")
+        }
+    )
+    @PostMapping(value = "")
+    public ResponseEntity<ResultResponse> postPlace() {
+        ResultResponse response;
+        try {
+            response = ResultResponse.of(ResultCode.POST_PLACE_SUCCESS,
+                    placeService.postPlace());
+        } catch (Exception e){
+            response = ResultResponse.of(ResultCode.POST_PLACE_FAIL, e.getMessage());
         }
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
@@ -63,7 +84,7 @@ public class PlaceController {
         }
     )
     @GetMapping(value = "/{placeId}")
-    public ResponseEntity<ResultResponse> getOnePlace(@PathVariable("placeId") String placeId){
+    public ResponseEntity<ResultResponse> getOnePlace(@PathVariable("placeId") String placeId) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
@@ -87,7 +108,7 @@ public class PlaceController {
     public ResponseEntity<ResultResponse> getPlaceLocation(
         @PathVariable("placeId") String placeId,
         @PathVariable("isRoadName") String isRoadName
-    ){
+    ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,

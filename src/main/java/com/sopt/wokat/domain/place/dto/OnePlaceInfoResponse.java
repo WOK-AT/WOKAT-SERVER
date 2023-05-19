@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +20,12 @@ public class OnePlaceInfoResponse {
     private List<String> hashtags;
     private String introduce;
     
+    private String location;
+    private String imageURL;
+/* 
+    @Builder
+    public OnePlaceInfoResponse() {
+
+    }
+*/
 }

@@ -21,7 +21,7 @@ import com.sopt.wokat.domain.member.dto.ProfileImageUploadDTO;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.entity.MemberProfile;
 import com.sopt.wokat.domain.member.entity.ProfileImage;
-import com.sopt.wokat.infra.aws.DownlaodFileS3Uploader;
+import com.sopt.wokat.infra.aws.S3ProfileUploader;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private DownlaodFileS3Uploader downlaodFileS3Uploader;
+    private S3ProfileUploader downlaodFileS3Uploader;
 
     public MemberRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;

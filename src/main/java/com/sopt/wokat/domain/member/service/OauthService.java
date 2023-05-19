@@ -13,29 +13,22 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
-import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.sopt.wokat.domain.member.dto.AuthorizationRequest;
-import com.sopt.wokat.domain.member.dto.JwtDTO;
 import com.sopt.wokat.domain.member.dto.LoginResponse;
 import com.sopt.wokat.domain.member.dto.MemberProfileQueryDTO;
 import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
-import com.sopt.wokat.domain.member.entity.MemberProfile;
 import com.sopt.wokat.domain.member.entity.ProfileImage;
 import com.sopt.wokat.domain.member.exception.MemberNotFoundException;
 import com.sopt.wokat.domain.member.oauth.OauthAttributes;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.config.redis.RedisUtil;
-import com.sopt.wokat.global.config.security.provider.KakaoUserInfo;
 import com.sopt.wokat.global.entity.Token;
 import com.sopt.wokat.global.util.JwtTokenProvider;
 
