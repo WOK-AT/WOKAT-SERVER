@@ -3,6 +3,7 @@ package com.sopt.wokat.domain.place.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,21 +65,23 @@ public class PlaceController {
     @Operation(
         summary = "장소 등록", 
         description = "장소를 등록하는 API입니다.", 
-        tags = {"Place"},
-        parameters = {
-          //  @RequestPart(name = "placeImages", description = "장소 이미지"),
-
-        }
+        tags = {"Place"}
     )
-    @PostMapping(value = "")
+    @PostMapping(
+        value = "", 
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE, 
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<ResultResponse> postPlace(
-        @RequestPart(required = false) List<MultipartFile> multipartFile,
-        @RequestBody(required = true) PostPlaceRequest placeRequest
+        @Parameter(description = "등록할 공간 사진 배열")
+        @RequestPart(name = "multipartFile", required = false) List<MultipartFile> multipartFile,
+        @Parameter(description = "등록할 공간 정보", name = "placeRequest", required = true)
+        @RequestBody PostPlaceRequest placeRequest
     ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.POST_PLACE_SUCCESS,
-                    placeService.postPlace());
+                    placeService.postPlace(multipartFile, placeRequest));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.POST_PLACE_FAIL, e.getMessage());
         }

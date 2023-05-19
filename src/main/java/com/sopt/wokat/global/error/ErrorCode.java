@@ -35,6 +35,9 @@ public enum ErrorCode {
     //! Member
     MEMBER_NOT_FOUND(400, "M001","유저를 찾을 수 없습니다."),
 
+    //! Place
+    INVALID_FILE(400, "P001", "올바르지 않은 파일입니다."),
+
     ;
 
     private final int status;

@@ -30,6 +30,10 @@ spring:
                 format-sql: true
                 use_sql_comments: true
         show-sql: true
+    servlet:
+        multipart:
+            max-file-size: 20MB
+            max-request-size: 20MB
 
 
 # Swagger springdoc-ui Configuration

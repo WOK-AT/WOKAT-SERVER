@@ -42,7 +42,8 @@ public class SwaggerConfig {
                 // Security 인증 컴포넌트 설정
                 .components(new Components().addSecuritySchemes("JWT", bearerAuth))
                 // API 마다 Security 인증 컴포넌트 설정
-                .addSecurityItem(addSecurityItem);  
+                .addSecurityItem(addSecurityItem)
+                .info(info);  
     }
 
 }

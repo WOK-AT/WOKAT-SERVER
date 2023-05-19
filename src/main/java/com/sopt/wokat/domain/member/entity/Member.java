@@ -57,7 +57,7 @@ public class Member extends BaseEntity {
         private String s3URL;
     }
 
-    public static Member createMember(String nickName, String userEmail, String provider, String providerId) {
+    public static Member createMember (String nickName, String userEmail, String provider, String providerId) {
         Member member = Member.builder()
             .role(Role.ROLE_MEMBER)
             .memberProfile(Member.MemberProfile.builder()

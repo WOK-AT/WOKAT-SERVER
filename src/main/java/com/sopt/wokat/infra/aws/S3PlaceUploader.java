@@ -1,7 +1,11 @@
 package com.sopt.wokat.infra.aws;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,9 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.sopt.wokat.domain.place.dto.PlaceImageUploadDTO;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sopt.wokat.domain.place.exception.FileUploadException;
+import com.sopt.wokat.global.error.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,25 +36,38 @@ public class S3PlaceUploader {
     @Value("${cloud.aws.s3.buckets.bucket2}")
     public String bucket;
 
-    public PlaceImageUploadDTO uploadS3ProfileImage(String classId, MultipartFile file) throws IOException {
-        String fileName = generateUniqueFileName();
-        String filePath = getDirectoryName(classId) + fileName;
+    public List<String> uploadS3ProfileImage(String classId, List<MultipartFile> multipartFile) throws IOException {
+        List<String> resultList = new ArrayList<>();
 
-        ObjectMetadata metadata= new ObjectMetadata();
-        metadata.setContentType(file.getContentType());
-        metadata.setContentLength(file.getSize());
+        multipartFile.forEach(file -> {
+            String fileName = generateFileName(file.getOriginalFilename());
+            String filePath = getDirectoryName(classId) + fileName;
 
-        amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(file.getSize());
+            objectMetadata.setContentType(file.getContentType());
 
-        String s3URL = amazonS3Client.getUrl(bucket, filePath).toString();
-        PlaceImageUploadDTO imageUploadDTO = new PlaceImageUploadDTO(s3URL, fileName);
-        return imageUploadDTO;
+            try (InputStream inputStream = file.getInputStream()) {
+                amazonS3Client.putObject(new PutObjectRequest(
+                    bucket, filePath, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
+                throw new FileUploadException();
+            }
+
+            String s3URL = amazonS3Client.getUrl(bucket, filePath).toString();
+            resultList.add(s3URL);
+        });
+
+        return resultList;
     }
 
     //! 객체 삭제
-	public void deleteObject(String classId, String storedFileName) throws AmazonServiceException {
+	public void deleteObject(String classId, String s3URL) throws AmazonServiceException {
         String filePath = getDirectoryName(classId);
-		amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, filePath + storedFileName));
+        String fileName = s3URL.split(filePath)[1];
+
+		amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, filePath + fileName));
 	}
 
     //! 버킷 내부 폴더 경로 설정 
@@ -55,16 +75,30 @@ public class S3PlaceUploader {
         String filePath = "";
 
         switch(classId) {
-            case "0": filePath = "freeZone/";
-            case "1": filePath = "meetingRoom/";
-            case "2": filePath = "cafe/";
+            case "0": 
+                filePath = "freeZone/";
+                break;
+            case "1": 
+                filePath = "meetingRoom/";
+                break;
+            case "2": 
+                filePath = "cafe/";
+                break;
         }
 
         return filePath;
     }
 
-    private String generateUniqueFileName() {
-        return UUID.randomUUID().toString();
+    private String generateFileName(String fileName) { 
+        return UUID.randomUUID().toString().concat(getFileExtension(fileName));
+    }
+
+    private String getFileExtension(String fileName) { // file 형식이 잘못된 경우를 확인
+        try {
+            return fileName.substring(fileName.lastIndexOf("."));
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new FileUploadException(ErrorCode.INVALID_FILE);
+        }
     }
 
 }
