@@ -1,5 +1,7 @@
 package com.sopt.wokat.domain.place.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.service.PlaceService;
 import com.sopt.wokat.global.result.ResultCode;
 import com.sopt.wokat.global.result.ResultResponse;
@@ -16,6 +21,7 @@ import com.sopt.wokat.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -60,11 +66,15 @@ public class PlaceController {
         description = "장소를 등록하는 API입니다.", 
         tags = {"Place"},
         parameters = {
-            @RequestPart(name = "placeImage", description = "장소 이미지", in = ParameterIn., example = "안국역")
+          //  @RequestPart(name = "placeImages", description = "장소 이미지"),
+
         }
     )
     @PostMapping(value = "")
-    public ResponseEntity<ResultResponse> postPlace() {
+    public ResponseEntity<ResultResponse> postPlace(
+        @RequestPart(required = false) List<MultipartFile> multipartFile,
+        @RequestBody(required = true) PostPlaceRequest placeRequest
+    ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.POST_PLACE_SUCCESS,

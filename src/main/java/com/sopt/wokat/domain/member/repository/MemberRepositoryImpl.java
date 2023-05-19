@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.dto.ProfileImageUploadDTO;
-import com.sopt.wokat.domain.member.entity.Member'
-import com.sopt.wokat.infra.aws.DownlaodFileS3Uploader;
+import com.sopt.wokat.domain.member.entity.Member;
+import com.sopt.wokat.infra.aws.S3ProfileUploader;
 
 import lombok.RequiredArgsConstructor;
 

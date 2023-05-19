@@ -1,31 +1,48 @@
 package com.sopt.wokat.global.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.Contact;
+
+
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpHeaders;
 
 @Configuration
-@OpenAPIDefinition(
-        info = @Info(
-                title = "✨WOKAT Swagger✨",
-                version = "v1.0.0",
-                description = "SOPT - WOKAT SERVER ",
-                contact = @Contact(
-                        name = "WOKAT Github",
-                        url = "https://github.com/Maro-SOPT/server"
-                )
-        ),
-        servers = @Server(url = "/")   //스웨거 테스트 시 http → https로 요청하기 위해
-)
+
 public class SwaggerConfig {
 
-        public OpenAPI openAPI() {
+    @Bean
+    public OpenAPI openAPI() {
 
-                return new OpenAPI();
-                        
-        }
+        Info info = new Info() 
+                .title("✨WOKAT Swagger✨") 
+                .version("v1.0.0") 
+                .description("SOPT - WOKAT SERVER ") 
+                .contact(new Contact().name("WOKAT Github")
+                .url("https://github.com/Maro-SOPT/server"));
+
+         // Security 스키마 설정
+        SecurityScheme bearerAuth = new SecurityScheme() 
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
+                .name(HttpHeaders.AUTHORIZATION);
+     
+         // Security 요청 설정
+        SecurityRequirement addSecurityItem = new SecurityRequirement();
+        addSecurityItem.addList("JWT");
+
+        return new OpenAPI()
+                // Security 인증 컴포넌트 설정
+                .components(new Components().addSecuritySchemes("JWT", bearerAuth))
+                // API 마다 Security 인증 컴포넌트 설정
+                .addSecurityItem(addSecurityItem);  
+    }
 
 }

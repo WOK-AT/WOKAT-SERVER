@@ -19,9 +19,9 @@ public class PlaceService {
         return "";
     }
 
-    public PostPlaceResponse postPlace() {
-
-        return 
+   // public PostPlaceResponse postPlace() {
+        public String postPlace() {
+        return "";
     }
 
     public String findPlaceInfo(String placeId) {
