@@ -44,7 +44,7 @@ public class MemberService {
 
     private Member getFindById(String memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException());
+                .orElseThrow(MemberNotFoundException::new);
     }
 
 }
