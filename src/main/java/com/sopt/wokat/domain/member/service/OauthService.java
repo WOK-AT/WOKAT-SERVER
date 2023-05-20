@@ -84,29 +84,21 @@ public class OauthService {
         Map<String, Object> userAttributes = getUserAttributes(provider, token);
         
         OauthResponse extract = OauthAttributes.extract(authorizationRequest.getProviderName(), userAttributes);
-        LOGGER.info(extract.getMember());
+   
         return saveOrUpdate(extract);
     }
 
     //! 저장, 변경 메소드 
     private Member saveOrUpdate(OauthResponse member) throws IOException {
         Member findMember = memberRepository.findByMemberProfile_ProviderId(member.getMember().getMemberProfile().getProviderId());
-        LOGGER.info(findMember);
+
         if (findMember == null) {
             findMember = memberRepository.setProfileImage(member);
-            LOGGER.info("user saved!!!!!!!");
         }
         //! 저장된 oauthurl과 다르면 s3에 저장하고 업데이트
         else if (!findMember.getProfileImage().getOauthURL().equals(member.getOauthProfileImageURL())) {
-            LOGGER.info("different!!!!!");
-            LOGGER.info("mem = {}", findMember.getProfileImage().getOauthURL());
-            LOGGER.info("ff = {}", member.getOauthProfileImageURL());
             memberRepository.updateProfileImage(findMember, member.getOauthProfileImageURL());
         }
-        else {
-            LOGGER.info("회원가입한 유저와 정보 동일");
-        }
-        
         return findMember;
     }
 

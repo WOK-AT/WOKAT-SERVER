@@ -26,7 +26,6 @@ public class ImageUploadTest {
         
         //! S3 업로드
         ProfileImageUploadDTO imageUploadDTO = downlaodFileS3Uploader.uploadS3ProfileImage(imageURL);
-        System.out.println("image URL: " + imageUploadDTO.getS3ImageURL());
 
         //! 업로드 삭제
         downlaodFileS3Uploader.deleteObject(imageUploadDTO.getFileName());

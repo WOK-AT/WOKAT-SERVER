@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
 
@@ -34,10 +36,9 @@ public class PlaceService {
         return placeResponse;
     }
 
-    public String findPlaceInfo(String placeId) {
-
-
-        return "";
+    public OnePlaceInfoResponse findPlaceInfo(String placeId) {
+        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeId);
+        return placeInfoResponse;
     }
 
     public String findPlaceLocation(String placeId, int isRoadName) {

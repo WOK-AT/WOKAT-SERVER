@@ -16,8 +16,6 @@ public class RedisTest {
     public void redisTest() {
         ValueOperations<String, String> vop = redisTemplate.opsForValue();        
         vop.set("yellow", "banana");        
-        
-        System.out.println(vop.get("yellow")); 
 
         redisTemplate.delete("yellow");
     }

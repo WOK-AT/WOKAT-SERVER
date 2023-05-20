@@ -100,10 +100,10 @@ public class PlaceController {
     public ResponseEntity<ResultResponse> getOnePlace(@PathVariable("placeId") String placeId) {
         ResultResponse response;
         try {
-            response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
+            response = ResultResponse.of(ResultCode.GET_PLACE_SUCCESS,
                     placeService.findPlaceInfo(placeId));
         } catch (Exception e){
-            response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
+            response = ResultResponse.of(ResultCode.GET_PLACE_FAIL, e.getMessage());
         }
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
