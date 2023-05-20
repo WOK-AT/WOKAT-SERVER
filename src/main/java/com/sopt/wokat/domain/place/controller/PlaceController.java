@@ -120,12 +120,13 @@ public class PlaceController {
     @GetMapping(value = "/{placeId}/address/{isRoadName}")
     public ResponseEntity<ResultResponse> getPlaceLocation(
         @PathVariable("placeId") String placeId,
-        @PathVariable("isRoadName") String isRoadName
-    ) {
+        @PathVariable("isRoadName") int isRoadName)
+    {
+
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
-                    placeService.findPlaceLocation());
+                    placeService.findPlaceLocation(placeId, isRoadName));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
         }

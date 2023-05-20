@@ -30,7 +30,7 @@ public class SpaceInfo extends BaseEntity {
     @Id
     @Schema(description = "Member ID")
     private String id;
-    
+
     @Field("space_class")
     @Schema(description = "공간 분류")
     private Space space;
@@ -43,7 +43,7 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "홈페이지 주소")
     @Builder.Default
     private String homepageURL = null;
-    
+
     @Field("space_name")
     @Schema(description = "공간명")
     private String name;
@@ -77,7 +77,7 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "도로명 주소")
     private String locationRoadName;
 
-    @Field("space_lotNumner") 
+    @Field("space_lotNumner")
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
@@ -104,7 +104,7 @@ public class SpaceInfo extends BaseEntity {
     @Field("space_wifi")
     @Schema(description = "와이파이 ID/PW")
     @Builder.Default
-    private Map<String, Object> wifi = null;     //! [ID: 아이디, PW: 비밀번호] 
+    private Map<String, Object> wifi = null;     //! [ID: 아이디, PW: 비밀번호]
 
     @Field("space_time")
     @Schema(description = "운영 시간")
@@ -122,25 +122,25 @@ public class SpaceInfo extends BaseEntity {
 
     public static SpaceInfo createSpaceInfo (PostPlaceRequest placeRequest) {
         SpaceInfo spaceInfo = SpaceInfo.builder()
-            .space(Space.fromValue(placeRequest.getSpaceClass().toString()))
-            .area(placeRequest.getArea())
-            .homepageURL(placeRequest.getHomepageURL())
-            .name(placeRequest.getName())
-            .isFree(placeRequest.getIsFree())
-            .isRequiredReserve(placeRequest.getIsRequiredReserve())
-            .socket(placeRequest.getSocket())
-            .parkingLot(placeRequest.getParkingLot())
-            .hdmiScreen(placeRequest.getHdmiScreen())
-            .locationRoadName(placeRequest.getLocationRoadName())
-            .locationLotNumber(placeRequest.getLocationLotNumber())
-            .headCount(placeRequest.getHeadCount())
-            .introduction(placeRequest.getIntroduction())
-            .contact(placeRequest.getContact())
-            .hashTags(placeRequest.getHashTags())
-            .wifi(placeRequest.getWifi())
-            .openTime(placeRequest.getOpenTime())
-            .distance(placeRequest.getDistance())
-            .build();
+                .space(Space.fromValue(placeRequest.getSpaceClass().toString()))
+                .area(placeRequest.getArea())
+                .homepageURL(placeRequest.getHomepageURL())
+                .name(placeRequest.getName())
+                .isFree(placeRequest.getIsFree())
+                .isRequiredReserve(placeRequest.getIsRequiredReserve())
+                .socket(placeRequest.getSocket())
+                .parkingLot(placeRequest.getParkingLot())
+                .hdmiScreen(placeRequest.getHdmiScreen())
+                .locationRoadName(placeRequest.getLocationRoadName())
+                .locationLotNumber(placeRequest.getLocationLotNumber())
+                .headCount(placeRequest.getHeadCount())
+                .introduction(placeRequest.getIntroduction())
+                .contact(placeRequest.getContact())
+                .hashTags(placeRequest.getHashTags())
+                .wifi(placeRequest.getWifi())
+                .openTime(placeRequest.getOpenTime())
+                .distance(placeRequest.getDistance())
+                .build();
 
         return spaceInfo;
     }

@@ -1,4 +1,4 @@
-package com.sopt.wokat.domain.member.oauth;
+package com.sopt.wokat.domain.member.exception.oauth;
 
 import java.util.Arrays;
 import java.util.Map;
