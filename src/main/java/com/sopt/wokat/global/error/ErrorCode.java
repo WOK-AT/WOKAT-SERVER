@@ -33,10 +33,11 @@ public enum ErrorCode {
     UNAUTHORIZED_REFRESH_TOKEN(401, "J004", "유효하지 않은 Refresh Token입니다."),
     
     //! Member
-    MEMBER_NOT_FOUND(400, "M001","유저를 찾을 수 없습니다."),
+    MEMBER_NOT_FOUND(400, "M001","존재하지 않는 유저입니다."),
 
     //! Place
     INVALID_FILE(400, "P001", "올바르지 않은 파일입니다."),
+    PLACE_NOT_FOUND(400, "P002", "존재하지 않는 공간입니다.")
 
     ;
 

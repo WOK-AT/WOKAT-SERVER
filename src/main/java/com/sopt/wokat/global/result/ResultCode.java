@@ -25,6 +25,8 @@ public enum ResultCode {
     // Place
     POST_PLACE_SUCCESS(200, "P001", "장소 등록에 성공했습니다."),
     POST_PLACE_FAIL(500, "P002", "장소 등록에 실패했습니다."),
+    GET_PLACE_SUCCESS(200, "P003", "특정 장소 조회에 성공했습니다."),
+    GET_PLACE_FAIL(500, "P004", "특정 장소 조회에 실패했습니다."),
 
     ;
 
