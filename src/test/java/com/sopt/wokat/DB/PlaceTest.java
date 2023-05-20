@@ -30,7 +30,6 @@ public class PlaceTest {
     public void convertAddressTest() {
         // 생성 후
         SpaceInfo place = SpaceInfo.builder()
-                        .id(new ObjectId())
                         .locationLotNumber("지번주소")
                         .locationRoadName("도로명주소")
                         .build();
