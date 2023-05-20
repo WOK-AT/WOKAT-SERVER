@@ -2,7 +2,6 @@ package com.sopt.wokat.domain.place.repository;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
-import com.sopt.wokat.domain.place.entity.Space;
 import com.sopt.wokat.domain.place.entity.SpaceInfo;
 import com.sopt.wokat.infra.aws.S3PlaceUploader;
 
@@ -44,5 +42,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
         return spaceInfo;
     }
+
 
 }

@@ -25,7 +25,7 @@ import com.sopt.wokat.domain.member.dto.OauthResponse;
 import com.sopt.wokat.domain.member.dto.OauthTokenResponse;
 import com.sopt.wokat.domain.member.entity.Member;
 import com.sopt.wokat.domain.member.exception.MemberNotFoundException;
-import com.sopt.wokat.domain.member.oauth.OauthAttributes;
+import com.sopt.wokat.domain.member.exception.oauth.OauthAttributes;
 import com.sopt.wokat.domain.member.repository.MemberRepository;
 import com.sopt.wokat.global.config.redis.RedisUtil;
 import com.sopt.wokat.global.entity.Token;
