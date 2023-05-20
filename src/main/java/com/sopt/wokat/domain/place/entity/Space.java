@@ -1,10 +1,5 @@
 package com.sopt.wokat.domain.place.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum Space {
     
     FREE_ZONE("0"),
@@ -12,5 +7,22 @@ public enum Space {
     CAFE("2");
 
     private final String value;
+    
+    Space(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public static Space fromValue(String value) {
+        for (Space role : Space.values()) {
+            if (role.value.equals(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid Role value: " + value);
+    }
 
 }

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class DownlaodFileS3Uploader {
+public class S3ProfileUploader {
     
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
 
@@ -61,4 +61,5 @@ public class DownlaodFileS3Uploader {
     private String generateUniqueFileName() {
         return UUID.randomUUID().toString();
     }
+    
 }

@@ -3,106 +3,146 @@ package com.sopt.wokat.domain.place.entity;
 import java.util.List;
 import java.util.Map;
 
-import lombok.*;
-import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.mongodb.lang.Nullable;
+import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
+import com.sopt.wokat.global.entity.BaseEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.data.mongodb.util.BsonUtils;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 
 @Data
+@Builder
 @EqualsAndHashCode(callSuper=false)
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "SpaceInfo")
 @Schema(description = "공간 정보 테이블")
-@Builder
-public class SpaceInfo {
+public class SpaceInfo extends BaseEntity {
 
-    @MongoId
-    private ObjectId id;
+    @Id
+    @Schema(description = "Member ID")
+    private String id;
 
-    @Field("공간 분류")
+    @Field("space_class")
     @Schema(description = "공간 분류")
     private Space space;
 
-    @Field("지역")
+    @Field("space_area")
     @Schema(description = "지역")
     private String area;
 
-    @Field("홈페이지 주소") @Nullable
+    @Field("homepage_url")
     @Schema(description = "홈페이지 주소")
-    private String homepageURL;
-    
-    @Field("무료 공간명")
+    @Builder.Default
+    private String homepageURL = null;
+
+    @Field("space_name")
     @Schema(description = "공간명")
     private String name;
 
-    @Field("유/무료 체크 확인") @Nullable
+    @Field("space_charge")
     @Schema(description = "유/무료")
-    private Boolean isFree;
+    @Builder.Default
+    private Boolean isFree = null;
 
-    @Field("예약 필수 여부") @Nullable
+    @Field("space_reserve")
     @Schema(description = "예약 필수 여부")
-    private String isRequiredReserve;
+    @Builder.Default
+    private Boolean isRequiredReserve = null;
 
-    @Field("공간소개") @Nullable
-    @Schema(description = "공간 소개")
-    private List<String> introduction;
-
-    @Field("공간 사진") @Nullable
-    @Schema(description = "공간 사진")
-    private List<String> image;
-
-    @Field("운영 시간") @Nullable
-    @Schema(description = "운영 시간")
-    //private Map<String, Object> openTime;  //! [요일: 운영시간]
-    private String openTime;
-
-    @Field("전화번호") @Nullable
-    @Schema(description = "전화번호")
-    private List<String> contact;
-
-    @Field("WIFI ID / PW") @Nullable
-    @Schema(description = "와이파이 ID/PW")
-    //private Map<String, Object> wifi;      //! [ID: 아이디, PW: 비밀번호]
-    private String wifi;
-
-    @Field("콘센트") @Nullable
+    @Field("space_socket")
     @Schema(description = "콘센트 정보")
-    private String socket;
+    @Builder.Default
+    private String socket = null;
 
-    @Field("주차공간 여부") @Nullable
+    @Field("space_parking")
     @Schema(description = "주차공간 정보")
-    private String parkingLot;
+    @Builder.Default
+    private String parkingLot = null;
 
-    @Field("HDMI/스크린 여부") @Nullable
+    @Field("space_hdmi_screen")
     @Schema(description = "HDMI/스크린 정보")
-    private String hdmiScreen;
+    @Builder.Default
+    private Boolean hdmiScreen = null;
 
-    @Field("공간 도로명 주소") @Nullable
+    @Field("space_roadName")
     @Schema(description = "도로명 주소")
     private String locationRoadName;
 
-    @Field("공간 지번 주소") @Nullable
+    @Field("space_lotNumner")
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
-    @Field("최대 수용 인원") @Nullable
+    @Field("space_headCount")
     @Schema(description = "수용 인원수")
-    private String headCount;
+    @Builder.Default
+    private String headCount = null;
 
-    @Field("해쉬태그") @Nullable
+    @Field("space_introduce")
+    @Schema(description = "공간 소개")
+    @Builder.Default
+    private List<String> introduction = null;
+
+    @Field("space_contact")
+    @Schema(description = "전화번호")
+    @Builder.Default
+    private List<String> contact = null;
+
+    @Field("space_hashTag")
     @Schema(description = "해쉬태그")
-    private List<String> hashTags; 
+    @Builder.Default
+    private List<String> hashTags = null;
 
-    @Field("지하철역에서 도보 몇분 ") @Nullable
+    @Field("space_wifi")
+    @Schema(description = "와이파이 ID/PW")
+    @Builder.Default
+    private Map<String, Object> wifi = null;     //! [ID: 아이디, PW: 비밀번호]
+
+    @Field("space_time")
+    @Schema(description = "운영 시간")
+    @Builder.Default
+    private Map<String, Object> openTime = null;  //! [요일: 운영시간]
+
+    @Field("space_distance")
     @Schema(description = "도보거리")
-//    private Map<String, Object> distance;   //! [역이름: 도보거리]
-    private String distance;
+    @Builder.Default
+    private Map<String, Object> distance = null;   //! [역이름: 도보거리]
 
+    @Field("space_images")
+    @Schema(description = "S3 이미지 URL")
+    private List<String> imageURLs;
+
+    public static SpaceInfo createSpaceInfo (PostPlaceRequest placeRequest) {
+        SpaceInfo spaceInfo = SpaceInfo.builder()
+                .space(Space.fromValue(placeRequest.getSpaceClass().toString()))
+                .area(placeRequest.getArea())
+                .homepageURL(placeRequest.getHomepageURL())
+                .name(placeRequest.getName())
+                .isFree(placeRequest.getIsFree())
+                .isRequiredReserve(placeRequest.getIsRequiredReserve())
+                .socket(placeRequest.getSocket())
+                .parkingLot(placeRequest.getParkingLot())
+                .hdmiScreen(placeRequest.getHdmiScreen())
+                .locationRoadName(placeRequest.getLocationRoadName())
+                .locationLotNumber(placeRequest.getLocationLotNumber())
+                .headCount(placeRequest.getHeadCount())
+                .introduction(placeRequest.getIntroduction())
+                .contact(placeRequest.getContact())
+                .hashTags(placeRequest.getHashTags())
+                .wifi(placeRequest.getWifi())
+                .openTime(placeRequest.getOpenTime())
+                .distance(placeRequest.getDistance())
+                .build();
+
+        return spaceInfo;
+    }
 
 }

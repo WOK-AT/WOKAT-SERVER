@@ -17,10 +17,6 @@ import lombok.*;
 @Schema(description = "기본 컬럼")
 @AllArgsConstructor @NoArgsConstructor
 public class BaseEntity {
-    
-    @Id
-    @Schema(description = "고유 ID")
-    private String id;
 
     @CreatedDate
     @Field("created_at")
