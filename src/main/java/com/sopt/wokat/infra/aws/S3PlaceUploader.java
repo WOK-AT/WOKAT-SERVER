@@ -3,9 +3,7 @@ package com.sopt.wokat.infra.aws;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -83,6 +81,9 @@ public class S3PlaceUploader {
                 break;
             case "2": 
                 filePath = "cafe/";
+                break;
+            case "3":
+                filePath = "zoneAndRoom/";
                 break;
         }
 

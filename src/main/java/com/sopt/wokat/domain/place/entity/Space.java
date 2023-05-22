@@ -4,7 +4,9 @@ public enum Space {
     
     FREE_ZONE("0"),
     MEETING_ROOM("1"),
-    CAFE("2");
+    CAFE("2"),
+    ZONE_AND_ROOM("3")
+    ;
 
     private final String value;
     
