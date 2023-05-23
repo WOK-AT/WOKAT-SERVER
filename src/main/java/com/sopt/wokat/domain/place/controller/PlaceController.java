@@ -129,10 +129,10 @@ public class PlaceController {
 
         ResultResponse response;
         try {
-            response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
+            response = ResultResponse.of(ResultCode.GET_PLACE_ADDRESS_SUCCESS,
                     placeService.findPlaceLocation(placeId, isRoadName));
         } catch (Exception e){
-            response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
+            response = ResultResponse.of(ResultCode.GET_PLACE_ADDRESS_FAIL, e.getMessage());
         }
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
