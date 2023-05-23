@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 public class OnePlaceInfoResponse {
 
+    private String id;
     private String category;
     private String placeName;
     private String count;
@@ -30,12 +31,13 @@ public class OnePlaceInfoResponse {
     private String location;
     private List<String> imageURLs;
     
-    public static OnePlaceInfoResponse creatOnePlaceInfoResponse (SpaceInfo spaceInfo) {
+    public static OnePlaceInfoResponse creatOnePlaceInfoResponse (String category, SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
-                    .category(spaceInfo.getSpace().getValue())
+                    .id(spaceInfo.getId())
+                    .category(category)
                     .placeName(spaceInfo.getName())
                     .count(spaceInfo.getHeadCount())
-                    .hashtags(spaceInfo.getHashTags())
+                    .hashtags(hashTags(spaceInfo.getHashTags()))
                     .introduce(spaceInfo.getIntroduction())
                     .location(spaceInfo.getLocationRoadName())
                     .imageURLs(spaceInfo.getImageURLs())
@@ -51,6 +53,10 @@ public class OnePlaceInfoResponse {
                     .build();
     }
 
+    public static List<String> hashTags(List<String> hashtags) {
+        List<String> result = hashtags.get(0).equals("") ? new ArrayList<>() : hashtags;
+        return result;
+    }
     /*
      *  {
 	 *	    "open": {
@@ -120,8 +126,10 @@ public class OnePlaceInfoResponse {
         Map<String, Object> infoHashMap = makeHashMap(
     "contact", contact,
             "homepage", homepageURL,
-            "socket", socket != null && socket.equals("true") ? true : (socket == null ? null : false),
-            "parking", parkingLot != null && parkingLot.equals("true") ? true : (socket == null ? null : false),
+           // "socket", socket != null && socket.equals("true") ? true : (socket == null ? null : false),
+            "socket", socket != null ? socket : false,
+          // "parking", parkingLot != null && parkingLot.equals("true") ? true : (socket == null ? null : false),
+            "parking", parkingLot != null ? parkingLot : false,
             "hdmi-screen", hdmiScreen,
             "wi-fi", wifiHashMap
         );

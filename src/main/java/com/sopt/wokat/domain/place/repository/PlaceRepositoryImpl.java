@@ -46,11 +46,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public OnePlaceInfoResponse findByIdCustom(String id) {
+    public OnePlaceInfoResponse findByIdCustom(String category, String id) {
         SpaceInfo spaceInfo = mongoTemplate.findById(id, SpaceInfo.class);
         if (spaceInfo == null) throw new PlaceNotFoundException();
 
-        OnePlaceInfoResponse placeInfoResponse = OnePlaceInfoResponse.creatOnePlaceInfoResponse(spaceInfo);
+        OnePlaceInfoResponse placeInfoResponse = OnePlaceInfoResponse.creatOnePlaceInfoResponse(category, spaceInfo);
         return placeInfoResponse;
     }
 

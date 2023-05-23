@@ -36,8 +36,8 @@ public class PlaceService {
         return placeResponse;
     }
 
-    public OnePlaceInfoResponse findPlaceInfo(String placeId) {
-        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeId);
+    public OnePlaceInfoResponse findPlaceInfo(String placeList, String placeId) {
+        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeList, placeId);
         return placeInfoResponse;
     }
 
