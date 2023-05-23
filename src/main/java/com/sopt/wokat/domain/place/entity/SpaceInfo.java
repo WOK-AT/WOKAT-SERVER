@@ -50,12 +50,12 @@ public class SpaceInfo extends BaseEntity {
     @Field("space_charge")
     @Schema(description = "유/무료")
     @Builder.Default
-    private Boolean isFree = null;
+    private String isFree = null;
 
     @Field("space_reserve")
     @Schema(description = "예약 필수 여부")
     @Builder.Default
-    private Boolean isRequiredReserve = null;
+    private String isRequiredReserve = null;
 
     @Field("space_socket")
     @Schema(description = "콘센트 정보")
@@ -70,7 +70,7 @@ public class SpaceInfo extends BaseEntity {
     @Field("space_hdmi_screen")
     @Schema(description = "HDMI/스크린 정보")
     @Builder.Default
-    private Boolean hdmiScreen = null;
+    private String hdmiScreen = null;
 
     @Field("space_roadName")
     @Schema(description = "도로명 주소")

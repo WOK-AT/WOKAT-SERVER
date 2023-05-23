@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.management.Query;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,8 +23,12 @@ public class PlaceTest {
 
     @Autowired
     private PlaceRepository placeRepository;
+
     @Autowired
     private PlaceController placeController;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Test
     public void convertAddressTest() {
@@ -47,5 +51,11 @@ public class PlaceTest {
         placeRepository.deleteById(place.getId().toString());
     }
 
+
+    //! 도큐먼트의 모든 데이터 삭제 
+    @Test
+    public void deleteAllTest() {
+         // mongoTemplate.remove(new Query(), "SpaceInfo");
+    }
 
 }
