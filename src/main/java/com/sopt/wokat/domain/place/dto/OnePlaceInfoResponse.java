@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 public class OnePlaceInfoResponse {
 
+    private String id;
     private String category;
     private String placeName;
     private String count;
@@ -32,6 +33,7 @@ public class OnePlaceInfoResponse {
     
     public static OnePlaceInfoResponse creatOnePlaceInfoResponse (SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
+                    .id(spaceInfo.getId())
                     .category(spaceInfo.getSpace().getValue())
                     .placeName(spaceInfo.getName())
                     .count(spaceInfo.getHeadCount())
