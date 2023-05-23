@@ -18,11 +18,11 @@ public class PostPlaceRequest {
     private String area;
     private String homepageURL;
     private String name;
-    private Boolean isFree;
-    private Boolean isRequiredReserve;
+    private String isFree;
+    private String isRequiredReserve;
     private String socket;
     private String parkingLot;
-    private Boolean hdmiScreen;
+    private String hdmiScreen;
     private String locationRoadName;
     private String locationLotNumber;
     private String headCount;

@@ -31,6 +31,7 @@ public class OnePlaceInfoResponse {
     private List<String> imageURLs;
     
     public static OnePlaceInfoResponse creatOnePlaceInfoResponse (SpaceInfo spaceInfo) {
+        System.out.println(spaceInfo);
         return OnePlaceInfoResponse.builder()
                     .category(spaceInfo.getSpace().getValue())
                     .placeName(spaceInfo.getName())
@@ -107,7 +108,7 @@ public class OnePlaceInfoResponse {
 	 *	}
      */
     public static Map<String, Object> getInformation(List<String> contact, String homepageURL, 
-                Map<String, Object> wiFiMap, String socket, String parkingLot, Boolean hdmiScreen) {
+                Map<String, Object> wiFiMap, String socket, String parkingLot, String hdmiScreen) {
         Map<String, Object> wifiHashMap = null;
         if (wiFiMap != null) {
             wifiHashMap = makeHashMap(
