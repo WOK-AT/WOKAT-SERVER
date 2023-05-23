@@ -31,10 +31,10 @@ public class OnePlaceInfoResponse {
     private String location;
     private List<String> imageURLs;
     
-    public static OnePlaceInfoResponse creatOnePlaceInfoResponse (SpaceInfo spaceInfo) {
+    public static OnePlaceInfoResponse creatOnePlaceInfoResponse (String category, SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
                     .id(spaceInfo.getId())
-                    .category(spaceInfo.getSpace().getValue())
+                    .category(category)
                     .placeName(spaceInfo.getName())
                     .count(spaceInfo.getHeadCount())
                     .hashtags(hashTags(spaceInfo.getHashTags()))
@@ -54,7 +54,6 @@ public class OnePlaceInfoResponse {
     }
 
     public static List<String> hashTags(List<String> hashtags) {
-        System.out.println(hashtags);
         List<String> result = hashtags.get(0).equals("") ? new ArrayList<>() : hashtags;
         return result;
     }

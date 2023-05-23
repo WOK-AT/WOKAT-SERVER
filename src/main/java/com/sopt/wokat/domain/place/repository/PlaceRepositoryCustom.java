@@ -13,6 +13,6 @@ public interface PlaceRepositoryCustom {
     
     SpaceInfo savePlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException;
 
-    OnePlaceInfoResponse findByIdCustom(String id);
+    OnePlaceInfoResponse findByIdCustom(String category, String id);
     
 }

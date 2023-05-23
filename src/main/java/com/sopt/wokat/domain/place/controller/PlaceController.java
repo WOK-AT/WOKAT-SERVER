@@ -93,15 +93,19 @@ public class PlaceController {
         description = "특정 장소의 정보를 반환하는 API입니다.", 
         tags = {"Place"},
         parameters = {
+            @Parameter(name = "placeList", description = "공간 카테고리", in = ParameterIn.PATH),
             @Parameter(name = "placeId", description = "공간 ID", in = ParameterIn.PATH)
         }
     )
-    @GetMapping(value = "/{placeId}")
-    public ResponseEntity<ResultResponse> getOnePlace(@PathVariable("placeId") String placeId) {
+    @GetMapping(value = "{placeList}/{placeId}")
+    public ResponseEntity<ResultResponse> getOnePlace(
+        @PathVariable("placeList") String placeList,
+        @PathVariable("placeId") String placeId
+    ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.GET_PLACE_SUCCESS,
-                    placeService.findPlaceInfo(placeId));
+                    placeService.findPlaceInfo(placeList, placeId));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.GET_PLACE_FAIL, e.getMessage());
         }
