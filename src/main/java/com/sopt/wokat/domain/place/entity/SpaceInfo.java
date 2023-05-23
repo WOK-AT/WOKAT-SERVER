@@ -76,7 +76,7 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "도로명 주소")
     private String locationRoadName;
 
-    @Field("space_lotNumner")
+    @Field("space_lotNumber")
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
