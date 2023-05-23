@@ -55,7 +55,7 @@ public class PlaceTest {
     //! 도큐먼트의 모든 데이터 삭제 
     @Test
     public void deleteAllTest() {
-         // mongoTemplate.remove(new Query(), "SpaceInfo");
+        mongoTemplate.remove(new Query(), "SpaceInfo");
     }
 
 }

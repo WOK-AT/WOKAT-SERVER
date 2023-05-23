@@ -31,7 +31,6 @@ public class OnePlaceInfoResponse {
     private List<String> imageURLs;
     
     public static OnePlaceInfoResponse creatOnePlaceInfoResponse (SpaceInfo spaceInfo) {
-        System.out.println(spaceInfo);
         return OnePlaceInfoResponse.builder()
                     .category(spaceInfo.getSpace().getValue())
                     .placeName(spaceInfo.getName())
