@@ -30,6 +30,7 @@ public class OnePlaceInfoResponse {
     private Map<String, Object> information;
     private String location;
     private List<String> imageURLs;
+    private Map<String, Object> distance;
     
     public static OnePlaceInfoResponse creatOnePlaceInfoResponse (String category, SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
@@ -50,6 +51,7 @@ public class OnePlaceInfoResponse {
                         spaceInfo.getParkingLot(),
                         spaceInfo.getHdmiScreen()
                     ))
+                    .distance(spaceInfo.getDistance())
                     .build();
     }
 
