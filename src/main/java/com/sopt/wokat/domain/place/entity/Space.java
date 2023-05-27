@@ -27,4 +27,8 @@ public enum Space {
         throw new IllegalArgumentException("Invalid Role value: " + value);
     }
 
+    public boolean isEmpty() {
+        return false;
+    }
+
 }
