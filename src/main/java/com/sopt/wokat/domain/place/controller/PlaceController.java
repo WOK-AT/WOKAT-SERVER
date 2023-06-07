@@ -1,6 +1,7 @@
 package com.sopt.wokat.domain.place.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
+import com.sopt.wokat.domain.place.entity.Space;
 import com.sopt.wokat.domain.place.service.PlaceService;
 import com.sopt.wokat.global.result.ResultCode;
 import com.sopt.wokat.global.result.ResultResponse;
@@ -41,21 +43,22 @@ public class PlaceController {
         parameters = {
             @Parameter(name = "station", description = "역 이름", in = ParameterIn.QUERY, example = "안국역"),
             @Parameter(name = "filter", description = "거리순/북마크순 필터링", in = ParameterIn.QUERY, example = "stars(북마크순)/distance(거리순)"),
-            @Parameter(name = "date", description = "예약 날짜", in = ParameterIn.QUERY, example = "2023-05-18"),
+            @Parameter(name = "date", description = "예약 날짜", in = ParameterIn.QUERY, example = "2023-05-18-목"),
             @Parameter(name = "person", description = "예약 인원수", in = ParameterIn.QUERY, example = "2")
         }
     )
     @GetMapping(value = "")
     public ResponseEntity<ResultResponse> getFilteredPlace(
-        @RequestParam(required = true) String station,
-        @RequestParam(required = true) String filter,
-        @RequestParam(required = false) String date,
-        @RequestParam(required = false) String person
+        @RequestParam(required = true) String area, //station
+        @RequestParam(required = true) Space space, //filter
+        @RequestParam(required = false) Map<String,Object> openTime, //date
+        @RequestParam(required = false) String headCount, //person
+        @RequestParam Integer page 
     ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
-                    placeService.filteringPlace());
+                    placeService.filteringPlace(area, space, openTime, headCount, page));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
         }
