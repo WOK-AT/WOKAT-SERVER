@@ -1,6 +1,7 @@
 package com.sopt.wokat.domain.place.service;
 
 import com.sopt.wokat.domain.place.entity.SpaceInfo;
+import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
 import com.sopt.wokat.domain.place.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
@@ -36,31 +37,18 @@ public class PlaceService {
         return placeResponse;
     }
 
-    public OnePlaceInfoResponse findPlaceInfo(String placeList, String placeId) {
-        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeList, placeId);
+    public OnePlaceInfoResponse findPlaceInfo(String placeId) {
+        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeId);
         return placeInfoResponse;
     }
 
     public String findPlaceLocation(String placeId, int isRoadName) {
-        SpaceInfo foundPlace = placeRepository.findById(placeId).get();
-
-        if(foundPlace == null){
-            System.out.println("해당 id의 공간이 존재하지 않습니다");
-        }
-
-
-        // 지번 주소일 경우
-        if(isRoadName == 0){
-            // 도로명 주소 반환
-            return foundPlace.getLocationRoadName();
-        }
-        // 도로명 주소일 경우
-        else{
-            // 지번 주소 반환
-            return foundPlace.getLocationLotNumber();
-        }
-
-
+        SpaceInfo foundPlace = placeRepository.findById(placeId)
+                .orElseThrow(PlaceNotFoundException::new);
+        //! 지번 주소일 경우
+        if(isRoadName == 0) return foundPlace.getLocationRoadName();
+        //! 도로명 주소일 경우
+        else return foundPlace.getLocationLotNumber();
     }
 
 }

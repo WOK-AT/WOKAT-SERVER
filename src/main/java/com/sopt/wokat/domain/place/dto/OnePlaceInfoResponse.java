@@ -24,6 +24,7 @@ public class OnePlaceInfoResponse {
     private String category;
     private String placeName;
     private String count;
+    private String bookingURL;
     private List<String> hashtags;
     private List<String> introduce;
     private Map<String, Object> operationHours;
@@ -32,12 +33,13 @@ public class OnePlaceInfoResponse {
     private List<String> imageURLs;
     private Map<String, Object> distance;
     
-    public static OnePlaceInfoResponse creatOnePlaceInfoResponse (String category, SpaceInfo spaceInfo) {
+    public static OnePlaceInfoResponse createOnePlaceInfoResponse (SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
                     .id(spaceInfo.getId())
-                    .category(category)
+                    .category(spaceInfo.getSpace().getValue())
                     .placeName(spaceInfo.getName())
                     .count(spaceInfo.getHeadCount())
+                    .bookingURL(spaceInfo.getBookingURL())
                     .hashtags(hashTags(spaceInfo.getHashTags()))
                     .introduce(spaceInfo.getIntroduction())
                     .location(spaceInfo.getLocationRoadName())

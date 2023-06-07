@@ -19,7 +19,7 @@ public class PostPlaceRequest {
     private String homepageURL;
     private String name;
     private String isFree;
-    private String isRequiredReserve;
+    private String bookingURL;
     private String socket;
     private String parkingLot;
     private String hdmiScreen;

@@ -52,10 +52,10 @@ public class SpaceInfo extends BaseEntity {
     @Builder.Default
     private String isFree = null;
 
-    @Field("space_reserve")
-    @Schema(description = "예약 필수 여부")
+    @Field("booking_url")
+    @Schema(description = "대관 신청 링크")
     @Builder.Default
-    private String isRequiredReserve = null;
+    private String bookingURL = null;
 
     @Field("space_socket")
     @Schema(description = "콘센트 정보")
@@ -80,7 +80,7 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
-    @Field("space_headCount")
+    @Field("space_headcount")
     @Schema(description = "수용 인원수")
     @Builder.Default
     private String headCount = null;
@@ -126,7 +126,7 @@ public class SpaceInfo extends BaseEntity {
                 .homepageURL(placeRequest.getHomepageURL())
                 .name(placeRequest.getName())
                 .isFree(placeRequest.getIsFree())
-                .isRequiredReserve(placeRequest.getIsRequiredReserve())
+                .bookingURL(placeRequest.getBookingURL())
                 .socket(placeRequest.getSocket())
                 .parkingLot(placeRequest.getParkingLot())
                 .hdmiScreen(placeRequest.getHdmiScreen())

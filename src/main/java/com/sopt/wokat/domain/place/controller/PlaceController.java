@@ -97,15 +97,14 @@ public class PlaceController {
             @Parameter(name = "placeId", description = "공간 ID", in = ParameterIn.PATH)
         }
     )
-    @GetMapping(value = "{placeList}/{placeId}")
+    @GetMapping(value = "/{placeId}")
     public ResponseEntity<ResultResponse> getOnePlace(
-        @PathVariable("placeList") String placeList,
         @PathVariable("placeId") String placeId
     ) {
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.GET_PLACE_SUCCESS,
-                    placeService.findPlaceInfo(placeList, placeId));
+                    placeService.findPlaceInfo(placeId));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.GET_PLACE_FAIL, e.getMessage());
         }

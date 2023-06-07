@@ -105,7 +105,7 @@ public class WebSecurityConfig {
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://wokat-client.vercel.app")); //! TO-DO 클라이언트 도메인 추가하기 
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://www.wokat.link")); //! TO-DO 클라이언트 도메인 추가하기 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         //configuration.setExposedHeaders(Arrays.asList("Content-Type", "Authorization"));

@@ -8,7 +8,7 @@ server:
 spring:
     # 로컬, 서버 프로필 설정 
     profiles:
-        active: dev   
+        active: dev
         group:
             dev: 
                 - site-dev 
