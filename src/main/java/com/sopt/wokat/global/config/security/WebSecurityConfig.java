@@ -35,8 +35,6 @@ public class WebSecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
     private static final String[] AUHT_WHITELIST_SWAGGER = {
         "/swagger-resources/**",
         "/swagger/**",
@@ -105,15 +103,13 @@ public class WebSecurityConfig {
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://www.wokat.link")); //! TO-DO 클라이언트 도메인 추가하기 
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://www.wokat.link"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
-        //configuration.setExposedHeaders(Arrays.asList("Content-Type", "Authorization"));
 
         configuration.setAllowCredentials(true);
 		configuration.setMaxAge(3600L);  //! CORS preflight 요청 1시간으로 설정 
         
-
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 

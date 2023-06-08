@@ -1,15 +1,20 @@
 package com.sopt.wokat.domain.place.service;
 
+import com.sopt.wokat.domain.place.entity.Space;
 import com.sopt.wokat.domain.place.entity.SpaceInfo;
 import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
 import com.sopt.wokat.domain.place.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
@@ -22,8 +27,9 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
     
-    public String filteringPlace() {
-        return "";
+    public List<SpaceInfo> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
+        Space space = Space.fromValue(placeClass);
+        return placeRepository.findSpaceByProperties(space, filteringPlaceRequest);
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
