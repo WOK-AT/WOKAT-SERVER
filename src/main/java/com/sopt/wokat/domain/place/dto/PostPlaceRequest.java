@@ -3,8 +3,6 @@ package com.sopt.wokat.domain.place.dto;
 import java.util.List;
 import java.util.Map;
 
-import com.sopt.wokat.domain.place.entity.Space;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

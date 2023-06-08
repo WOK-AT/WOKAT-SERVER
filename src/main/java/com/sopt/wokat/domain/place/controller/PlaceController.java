@@ -6,14 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.service.PlaceService;
 import com.sopt.wokat.global.result.ResultCode;
@@ -39,25 +40,20 @@ public class PlaceController {
         description = "위치를 이용해 장소를 필터링하는 API입니다.", 
         tags = {"Place"},
         parameters = {
-            @Parameter(name = "station", description = "역 이름", in = ParameterIn.QUERY, example = "안국역"),
-            @Parameter(name = "filter", description = "거리순/북마크순 필터링", in = ParameterIn.QUERY, example = "stars(북마크순)/distance(거리순)"),
-            @Parameter(name = "date", description = "예약 날짜", in = ParameterIn.QUERY, example = "2023-05-18"),
-            @Parameter(name = "person", description = "예약 인원수", in = ParameterIn.QUERY, example = "2")
+            @Parameter(name = "placeList", description = "공간 카테고리", in = ParameterIn.PATH)
         }
     )
-    @GetMapping(value = "")
+    @GetMapping(value = "/filter/{placeList}")
     public ResponseEntity<ResultResponse> getFilteredPlace(
-        @RequestParam(required = true) String station,
-        @RequestParam(required = true) String filter,
-        @RequestParam(required = false) String date,
-        @RequestParam(required = false) String person
+        @PathVariable("placeList") String placeClass,
+        @ModelAttribute FilteringPlaceRequest filteringPlaceRequest
     ) {
         ResultResponse response;
         try {
-            response = ResultResponse.of(ResultCode.LOGIN_SUCCESS,
-                    placeService.filteringPlace());
+            response = ResultResponse.of(ResultCode.GET_PLACE_LIST_SUCCESS,
+                    placeService.filteringPlace(placeClass, filteringPlaceRequest));
         } catch (Exception e){
-            response = ResultResponse.of(ResultCode.LOGIN_FAIL, e.getMessage());
+            response = ResultResponse.of(ResultCode.GET_PLACE_LIST_FAIL, e.getMessage());
         }
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
@@ -93,7 +89,6 @@ public class PlaceController {
         description = "특정 장소의 정보를 반환하는 API입니다.", 
         tags = {"Place"},
         parameters = {
-            @Parameter(name = "placeList", description = "공간 카테고리", in = ParameterIn.PATH),
             @Parameter(name = "placeId", description = "공간 ID", in = ParameterIn.PATH)
         }
     )
@@ -117,7 +112,7 @@ public class PlaceController {
         tags = {"Place"},
         parameters = {
             @Parameter(name = "placeId", description = "공간 ID", in = ParameterIn.PATH),
-            @Parameter(name = "isRoadName", description = "도로명주소(true)/지번주소(false)", in = ParameterIn.PATH)
+            @Parameter(name = "isRoadName", description = "도로명주소(0)/지번주소(1)", in = ParameterIn.PATH)
         }
     )
     @GetMapping(value = "/{placeId}/address/{isRoadName}")
