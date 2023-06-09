@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FilteringPlaceRequest {
     
-    @Parameter(name = "area", description = "역 이름", required = true,  in = ParameterIn.QUERY, example = "안국역")
-    private String area;
+    @Parameter(name = "station", description = "역 이름", required = true,  in = ParameterIn.QUERY, example = "안국역")
+    private String station;
 
     @Parameter(name = "filter", description = "거리순/북마크순 필터링", required = true,  in = ParameterIn.QUERY, example = "1(북마크순)/0(거리순)")
     private Integer filter;

@@ -73,6 +73,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         //! 1) 카페/무료회의룸/무료공간 필터링
         criteria.add(Criteria.where("space").is(space));
 
+
+        
+        /**
+         * 
         //! 2) 거리순 필터링 
         if (filteringPlaceRequest.getFilter() == 0) {
 
@@ -96,6 +100,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             //? 3. 크롤링 통해 예약마감 필터링(가능한 장소만)
         }
 
+         */
+        
         query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         return mongoTemplate.find(query, SpaceInfo.class); 
     }

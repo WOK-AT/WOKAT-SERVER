@@ -2,8 +2,11 @@ package com.sopt.wokat.domain.place.service;
 
 import com.sopt.wokat.domain.place.entity.Space;
 import com.sopt.wokat.domain.place.entity.SpaceInfo;
+import com.sopt.wokat.domain.place.entity.Station;
 import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
 import com.sopt.wokat.domain.place.repository.PlaceRepository;
+import com.sopt.wokat.domain.place.repository.StationRepository;
+
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.util.List;
@@ -26,9 +29,15 @@ import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final StationRepository stationRepository;
     
     public List<SpaceInfo> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
         Space space = Space.fromValue(placeClass);
+        List<Station> stations = stationRepository.findByName(filteringPlaceRequest.getStation());
+
+        //! 역의 위경도 통해 지역 찾기 
+        String area = getAreaByStation(stations);
+
         return placeRepository.findSpaceByProperties(space, filteringPlaceRequest);
     }
 

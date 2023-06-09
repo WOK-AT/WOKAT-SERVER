@@ -37,8 +37,11 @@ public enum ErrorCode {
 
     //! Place
     INVALID_FILE(400, "P001", "올바르지 않은 파일입니다."),
-    PLACE_NOT_FOUND(400, "P002", "존재하지 않는 공간입니다.")
+    PLACE_NOT_FOUND(400, "P002", "존재하지 않는 공간입니다."),
 
+
+    //! Kakao API
+    COORDS_TO_LOCATION_FAIL(500, "K001", "좌표 주소변환 실패")
     ;
 
     private final int status;
