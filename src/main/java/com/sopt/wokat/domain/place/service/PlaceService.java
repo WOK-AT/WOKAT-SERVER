@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
+import com.sopt.wokat.domain.place.dto.FilteringPlaceResponse;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
@@ -38,7 +39,7 @@ public class PlaceService {
     @Autowired
     private APICoordToLocation apiCoordToLocation;
     
-    public List<SpaceInfo> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
+    public List<FilteringPlaceResponse> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
         String area;
 
         Space space = Space.fromValue(placeClass);

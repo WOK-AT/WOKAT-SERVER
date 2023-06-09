@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
+import com.sopt.wokat.domain.place.dto.FilteringPlaceResponse;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.entity.Space;
@@ -64,15 +65,16 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public List<SpaceInfo> findSpaceByProperties(Space space, String area, FilteringPlaceRequest filteringPlaceRequest) {
-        Pageable pageable = PageRequest.of(filteringPlaceRequest.getPage(), 100, Sort.unsorted());
+    public List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, FilteringPlaceRequest filteringPlaceRequest) {
+        Pageable pageable = PageRequest.of(filteringPlaceRequest.getPage(), 100, 
+                    Sort.by(Sort.Direction.ASC, "name"));
         Query query = new Query().with(pageable);
 
         List<Criteria> criteria = new ArrayList<>();
         
         //! 1) 카페/무료회의룸/무료공간 필터링
         criteria.add(Criteria.where("space").is(space));
-        System.out.println(area);
+        
         //! 2) 지역 필터링
         criteria.add(Criteria.where("area").is(area));
 
@@ -104,7 +106,24 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
          */
         
         query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
-        return mongoTemplate.find(query, SpaceInfo.class); 
+        List<SpaceInfo> spaceList = mongoTemplate.find(query, SpaceInfo.class); 
+
+        //! DTO 넣기
+        List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
+        for (SpaceInfo spaceInfo : spaceList) {
+            FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
+
+            placeReturnDTO.setPlace(spaceInfo.getName());
+            placeReturnDTO.setDistance(spaceInfo.getDistance());
+            placeReturnDTO.setCount(spaceInfo.getHeadCount());
+            placeReturnDTO.setHashtags(spaceInfo.getHashTags());
+            placeReturnDTO.setLocation(spaceInfo.getLocationRoadName());
+            placeReturnDTO.setImageURL(spaceInfo.getImageURLs().get(0));
+
+            spaceReturnList.add(placeReturnDTO);
+        }
+
+        return spaceReturnList;
     }
 
 }

@@ -1,8 +1,6 @@
 package com.sopt.wokat.infra.kakao;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,13 +9,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import com.sopt.wokat.global.error.ErrorCode;
-import com.sopt.wokat.global.error.exception.KakaoAPIRequestException;
 
 import lombok.RequiredArgsConstructor;
 
