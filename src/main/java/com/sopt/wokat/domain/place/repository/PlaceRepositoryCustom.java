@@ -18,6 +18,6 @@ public interface PlaceRepositoryCustom {
 
     OnePlaceInfoResponse findByIdCustom(String id) throws PlaceNotFoundException ;
     
-    List<SpaceInfo> findSpaceByProperties(Space space, FilteringPlaceRequest filteringPlaceRequest);
+    List<SpaceInfo> findSpaceByProperties(Space space, String area, FilteringPlaceRequest filteringPlaceRequest);
 
 }

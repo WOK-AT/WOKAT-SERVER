@@ -2,6 +2,7 @@ package com.sopt.wokat.infra.kakao;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +57,6 @@ public class APICoordToLocation {
                 APIDocument[] documents = apiResponseBody.getDocuments();
                 if (documents != null && documents.length > 0) {
                     addressName = documents[0].getAddressName();
-                    LOGGER.info("Address Name: " + addressName);
                 } else {
                     LOGGER.info("No documents found.");
                 }
@@ -67,6 +67,12 @@ public class APICoordToLocation {
             LOGGER.error("Request failed with status code: " + response.getStatusCode());
         }
         
-        return addressName;
+        String[] locationList = addressName.split(" ");
+        if (!locationList[0].equals("서울특별시")) {
+            return null;
+        } else {
+            return locationList[1];
+        }
     }
+
 }

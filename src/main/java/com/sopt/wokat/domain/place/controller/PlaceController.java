@@ -1,6 +1,8 @@
 package com.sopt.wokat.domain.place.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,18 +46,20 @@ public class PlaceController {
         }
     )
     @GetMapping(value = "/filter/{placeList}")
-    public ResponseEntity<ResultResponse> getFilteredPlace(
+    public ResponseEntity<Map<String, Object>> getFilteredPlace(
         @PathVariable("placeList") String placeClass,
         @ModelAttribute FilteringPlaceRequest filteringPlaceRequest
     ) {
         ResultResponse response;
+        Map<String, Object> resultList = new HashMap<>();
         try {
             response = ResultResponse.of(ResultCode.GET_PLACE_LIST_SUCCESS,
                     placeService.filteringPlace(placeClass, filteringPlaceRequest));
         } catch (Exception e){
             response = ResultResponse.of(ResultCode.GET_PLACE_LIST_FAIL, e.getMessage());
         }
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+        resultList.put("placeList", response);
+        return new ResponseEntity<>(resultList, HttpStatus.valueOf(response.getStatus()));
     }
 
     @Operation(
@@ -120,7 +124,6 @@ public class PlaceController {
         @PathVariable("placeId") String placeId,
         @PathVariable("isRoadName") int isRoadName)
     {
-
         ResultResponse response;
         try {
             response = ResultResponse.of(ResultCode.GET_PLACE_ADDRESS_SUCCESS,

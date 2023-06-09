@@ -64,7 +64,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public List<SpaceInfo> findSpaceByProperties(Space space, FilteringPlaceRequest filteringPlaceRequest) {
+    public List<SpaceInfo> findSpaceByProperties(Space space, String area, FilteringPlaceRequest filteringPlaceRequest) {
         Pageable pageable = PageRequest.of(filteringPlaceRequest.getPage(), 100, Sort.unsorted());
         Query query = new Query().with(pageable);
 
@@ -72,9 +72,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         
         //! 1) 카페/무료회의룸/무료공간 필터링
         criteria.add(Criteria.where("space").is(space));
+        System.out.println(area);
+        //! 2) 지역 필터링
+        criteria.add(Criteria.where("area").is(area));
 
-
-        
         /**
          * 
         //! 2) 거리순 필터링 
