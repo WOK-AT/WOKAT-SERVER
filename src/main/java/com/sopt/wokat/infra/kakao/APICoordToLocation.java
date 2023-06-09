@@ -3,7 +3,10 @@ package com.sopt.wokat.infra.kakao;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -21,36 +24,49 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class APICoordToLocation {
 
+    private final Logger LOGGER = LogManager.getLogger(this.getClass());
+    
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
 	private String KAKAO_API_KEY;
     
-    public String getAreaByCoordinates(String longitude, String latitude) {
-        String responseBody = "";
+    public String getAreaByCoordinates(String longitude, String latitude) throws URISyntaxException {
+        RestTemplate restTemplate = new RestTemplate();
+        String addressName = "";
 
-        try {
-            String url = String.format("https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=%s&y=%s", 
-                    String.valueOf(longitude), String.valueOf(latitude));
+        //! 요청 URL, 토큰 설정
+        String url = String.format("https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=%s&y=%s", 
+                String.valueOf(longitude), String.valueOf(latitude));
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " + KAKAO_API_KEY);
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        //! 헤더에 Authorization 토큰 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " + KAKAO_API_KEY);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-            RequestEntity<Void> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, new URI(url));
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
+        //! GET 요청 
+        ResponseEntity<APIResponseBody> response = restTemplate.exchange( 
+            url, HttpMethod.GET, requestEntity, APIResponseBody.class);
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                responseBody = response.getBody();
-                System.out.println(responseBody);
+        //! 응답 처리
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            APIResponseBody apiResponseBody = response.getBody();
+            if (apiResponseBody != null) {
+                APIDocument[] documents = apiResponseBody.getDocuments();
+                if (documents != null && documents.length > 0) {
+                    addressName = documents[0].getAddressName();
+                    LOGGER.info("Address Name: " + addressName);
+                } else {
+                    LOGGER.info("No documents found.");
+                }
             } else {
-                System.out.println("Request failed with status code: " + response.getStatusCode());
+                LOGGER.info("Response body is empty.");
             }
-
-            return responseBody;
-            
-        } catch (URISyntaxException e) {
-            throw new KakaoAPIRequestException(ErrorCode.COORDS_TO_LOCATION_FAIL);
+        } else {
+            LOGGER.error("Request failed with status code: " + response.getStatusCode());
         }
+        
+        return addressName;
     }
 }
