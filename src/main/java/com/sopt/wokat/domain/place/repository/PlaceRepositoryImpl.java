@@ -1,10 +1,15 @@
 package com.sopt.wokat.domain.place.repository;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
 import com.sopt.wokat.domain.place.dto.FilteringPlaceResponse;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
@@ -22,7 +28,12 @@ import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.entity.Space;
 import com.sopt.wokat.domain.place.entity.SpaceInfo;
 import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
+import com.sopt.wokat.global.error.ErrorCode;
+import com.sopt.wokat.global.error.exception.KakaoAPIRequestException;
+import com.sopt.wokat.global.error.exception.TmapAPIRequestException;
 import com.sopt.wokat.infra.aws.S3PlaceUploader;
+import com.sopt.wokat.infra.kakao.LocationToCoord.APILocationToCoord;
+import com.sopt.wokat.infra.tmap.WalkingDistance.APIGetWalkingDist;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,11 +41,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     
+    private final Logger LOGGER = LogManager.getLogger(this.getClass());
+    
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Autowired
     private S3PlaceUploader s3PlaceUploader;
+
+    @Autowired
+    private APILocationToCoord apiLocationToCoord;
+
+    @Autowired
+    private APIGetWalkingDist apiGetWalkingDist;
 
     public PlaceRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
@@ -65,7 +84,9 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, FilteringPlaceRequest filteringPlaceRequest) {
+    public List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, String station,
+                    CoordinateDTO stationCoord, FilteringPlaceRequest filteringPlaceRequest) {
+        //* DB에서 필터링 결과 가져오기 
         Pageable pageable = PageRequest.of(filteringPlaceRequest.getPage(), 100, 
                     Sort.by(Sort.Direction.ASC, "name"));
         Query query = new Query().with(pageable);
@@ -74,49 +95,18 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         
         //! 1) 카페/무료회의룸/무료공간 필터링
         criteria.add(Criteria.where("space").is(space));
-        
         //! 2) 지역 필터링
         criteria.add(Criteria.where("area").is(area));
-
-        //! 3) 정렬 기준 - 도보 순 정렬 
-        //* 3-1) 공간의 위경도 가져오는 api 호출 => kakao map 
-        //* 3-2) 검색한 역의 위경도와 공간의 위경도 이용해서 도보거리 api 날려서 최단시간(totalTime - 초 기준)인 것들 => tmap 
-
-        
-
-        /**
-         * 
-        //! 2) 거리순 필터링 
-        if (filteringPlaceRequest.getFilter() == 0) {
-
-            //? 1. Kakao 주소-좌표 변환 API => 지하철 역의 주소 좌표 변환 후, 좌표 이용해 지역 값 얻기 
-                //? filteringPlaceRequest.getArea() -> 지하철역 
-            //? 2. 같은 지역에 속하는 공간들을 검색 
-            //? 3. 검색된 공간들의 도보거리 계산 후 정렬 
-                //? 지하철역만 기준인 경우 - 단순 도보거리 가까운걸로
-                //? 지역 기준인 경우 - 좌표 필요 
-
-        //! 3) 북마크순 필터링 (2차 스프린트)
-        } else {
-        }
-
-        //! 4) 인원-날짜 필터링 
-        if (space == Space.MEETING_ROOM && 
-                filteringPlaceRequest.getDate() != null &&
-                filteringPlaceRequest.getHeadCount() != null) {
-            //? 1. 휴무일 필터링 
-            //? 2. 최대 인원수 필터링
-            //? 3. 크롤링 통해 예약마감 필터링(가능한 장소만)
-        }
-
-         */
         
         query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         List<SpaceInfo> spaceList = mongoTemplate.find(query, SpaceInfo.class); 
 
+        //! 거리순 정렬하기 
+        List<SpaceInfo> sortedSpace = sortSpaceByDist(spaceList, station, stationCoord);
+
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
-        for (SpaceInfo spaceInfo : spaceList) {
+        for (SpaceInfo spaceInfo : sortedSpace) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
 
             placeReturnDTO.setPlace(spaceInfo.getName());
@@ -130,6 +120,41 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         }
 
         return spaceReturnList;
+    }
+
+    public List<SpaceInfo> sortSpaceByDist(List<SpaceInfo> spaceList, String station, CoordinateDTO stationCoord) {
+        Collections.sort(spaceList, new Comparator<SpaceInfo>() {
+            @Override
+            public int compare(SpaceInfo space1, SpaceInfo space2) {
+                //! 각 공간의 위경도 가져오기
+                CoordinateDTO coordinate1;
+                CoordinateDTO coordinate2;
+
+                try {
+                    coordinate1 = apiLocationToCoord.getCoordByLocation(space1.getLocationRoadName());
+                    coordinate2 = apiLocationToCoord.getCoordByLocation(space2.getLocationRoadName());
+                } catch (URISyntaxException e) {
+                    throw new KakaoAPIRequestException(ErrorCode.LOCATION_TO_COORDS_FAIL);
+                }
+                LOGGER.info("{}, {}", space1.getName(), space2.getName());
+                //! 공간과 역의 도보거리 
+                int walkTime1;
+                int walkTime2;
+
+                try {
+                    walkTime1 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate1, space1.getName());
+                    walkTime2 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate2, space1.getName());
+                } catch (URISyntaxException | JSONException e) {
+                    throw new TmapAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
+                }
+                
+                int compareResult = Integer.compare(walkTime1, walkTime2);
+                LOGGER.info("{}, {}", walkTime1, walkTime2);
+                return compareResult;
+            }
+        });
+
+        return spaceList;
     }
 
 }

@@ -28,8 +28,8 @@ public class KakaoTest {
     
     @Test
     public void convertCoordsToLocation() {
-        String longitude = "127.028461";
-        String latitude = "37.527072";
+        double longitude = 127.028461;
+        double latitude = 37.527072;
 
         try {
             String area = apiCoordToLocation.getAreaByCoordinates(longitude, latitude);

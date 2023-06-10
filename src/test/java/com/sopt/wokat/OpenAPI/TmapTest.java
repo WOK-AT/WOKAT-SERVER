@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.global.error.ErrorCode;
-import com.sopt.wokat.global.error.exception.KakaoAPIRequestException;
+import com.sopt.wokat.global.error.exception.TmapAPIRequestException;
 import com.sopt.wokat.infra.tmap.WalkingDistance.APIGetWalkingDist;
 
 @SpringBootTest
@@ -32,7 +32,7 @@ public class TmapTest {
             int totalTime = apiGetWalkingDist.getWalkingDistance(departCoord, "출발지", destCoord, "도착지");
             LOGGER.info(totalTime);
         } catch (URISyntaxException e) {
-            throw new KakaoAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
+            throw new TmapAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
         } catch (JSONException e) {
             e.printStackTrace();
         }

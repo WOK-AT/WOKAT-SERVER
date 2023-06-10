@@ -36,10 +36,10 @@ public class Station {
 
     @Field("lat")
     @Schema(description = "위도")
-    private String latitude;
+    private double latitude;
 
     @Field("lng")
     @Schema(description = "경도")
-    private String longitude;
+    private double longitude;
 
 }

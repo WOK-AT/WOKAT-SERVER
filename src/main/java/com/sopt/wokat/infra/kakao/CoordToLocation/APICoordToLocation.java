@@ -24,7 +24,7 @@ public class APICoordToLocation {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
 	private String KAKAO_API_KEY;
     
-    public String getAreaByCoordinates(String longitude, String latitude) throws URISyntaxException {
+    public String getAreaByCoordinates(double longitude, double latitude) throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
         String addressName = "";
 

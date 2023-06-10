@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
 import com.sopt.wokat.domain.place.dto.FilteringPlaceResponse;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
@@ -41,9 +42,11 @@ public class PlaceService {
     
     public List<FilteringPlaceResponse> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
         String area;
-
         Space space = Space.fromValue(placeClass);
+
         List<Station> stations = stationRepository.findByName(filteringPlaceRequest.getStation());
+        CoordinateDTO stationCoord = new CoordinateDTO(stations.get(0).getLongitude(), 
+                    stations.get(0).getLatitude());
 
         //! 역의 위경도 통해 지역 찾기 
         try {
@@ -54,7 +57,8 @@ public class PlaceService {
         }
 
         if (area == null) return new ArrayList<>();     //! 서울특별시 아닌 경우 
-        return placeRepository.findSpaceByProperties(space, area, filteringPlaceRequest);
+        return placeRepository.findSpaceByProperties(space, area, filteringPlaceRequest.getStation(),
+                    stationCoord, filteringPlaceRequest);
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
