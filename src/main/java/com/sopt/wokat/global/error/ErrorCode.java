@@ -40,9 +40,10 @@ public enum ErrorCode {
     PLACE_NOT_FOUND(400, "P002", "존재하지 않는 공간입니다."),
 
 
-    //! Kakao API
-    COORDS_TO_LOCATION_FAIL(500, "K001", "좌표 주소변환 실패"),
-    LOCATION_TO_COORDS_FAIL(500, "K002", "주소 좌표변환 실패"),
+    //! Open API
+    COORDS_TO_LOCATION_FAIL(500, "O001", "좌표 주소변환 실패"),
+    LOCATION_TO_COORDS_FAIL(500, "O002", "주소 좌표변환 실패"),
+    GET_WALK_DISTANCE_FAIL(500, "O003", "도보거리 조회 실패")
     ;
 
     private final int status;

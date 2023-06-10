@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class APIDocument {
+public class Document {
 
     @JsonProperty("address_name")
     private String addressName;

@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class APIResponseBody {
+public class ResponseBody {
     
     @JsonProperty("documents")
-    private APIDocument[] documents;
+    private Document[] documents;
 
 }

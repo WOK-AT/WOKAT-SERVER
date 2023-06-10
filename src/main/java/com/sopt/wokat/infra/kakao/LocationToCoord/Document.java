@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class APIDocument {
+public class Document {
     
     @JsonProperty("x")
-    private String longitude;
+    private double longitude;
 
     @JsonProperty("y")
-    private String latitude;
+    private double latitude;
 
 }

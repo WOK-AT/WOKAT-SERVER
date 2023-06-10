@@ -40,14 +40,14 @@ public class APICoordToLocation {
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
         //! GET 요청 
-        ResponseEntity<APIResponseBody> response = restTemplate.exchange( 
-            url, HttpMethod.GET, requestEntity, APIResponseBody.class);
+        ResponseEntity<ResponseBody> response = restTemplate.exchange( 
+            url, HttpMethod.GET, requestEntity, ResponseBody.class);
 
         //! 응답 처리
         if (response.getStatusCode().is2xxSuccessful()) {
-            APIResponseBody apiResponseBody = response.getBody();
-            if (apiResponseBody != null) {
-                APIDocument[] documents = apiResponseBody.getDocuments();
+            ResponseBody responseBody = response.getBody();
+            if (responseBody != null) {
+                Document[] documents = responseBody.getDocuments();
                 if (documents != null && documents.length > 0) {
                     addressName = documents[0].getAddressName();
                 } else {
