@@ -100,10 +100,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         
         query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         List<SpaceInfo> spaceList = mongoTemplate.find(query, SpaceInfo.class); 
-
+        LOGGER.info(spaceList);
         //! 거리순 정렬하기 
         List<SpaceInfo> sortedSpace = sortSpaceByDist(spaceList, station, stationCoord);
-
+        LOGGER.info(sortedSpace);
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : sortedSpace) {
@@ -136,11 +136,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 } catch (URISyntaxException e) {
                     throw new KakaoAPIRequestException(ErrorCode.LOCATION_TO_COORDS_FAIL);
                 }
-                LOGGER.info("{}, {}", space1.getName(), space2.getName());
+
                 //! 공간과 역의 도보거리 
                 int walkTime1;
                 int walkTime2;
-
+                
                 try {
                     walkTime1 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate1, space1.getName());
                     walkTime2 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate2, space1.getName());
@@ -149,7 +149,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 }
                 
                 int compareResult = Integer.compare(walkTime1, walkTime2);
-                LOGGER.info("{}, {}", walkTime1, walkTime2);
+            
                 return compareResult;
             }
         });
