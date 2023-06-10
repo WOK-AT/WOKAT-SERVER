@@ -1,4 +1,4 @@
-package com.sopt.wokat.infra.kakao;
+package com.sopt.wokat.infra.kakao.CoordToLocation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

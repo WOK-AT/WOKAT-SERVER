@@ -78,6 +78,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         //! 2) 지역 필터링
         criteria.add(Criteria.where("area").is(area));
 
+        //! 3) 정렬 기준 - 도보 순 정렬 
+        //* 3-1) 공간의 위경도 가져오는 api 호출 => kakao map 
+        //* 3-2) 검색한 역의 위경도와 공간의 위경도 이용해서 도보거리 api 날려서 최단시간(totalTime - 초 기준)인 것들 => tmap 
+
+        
+
         /**
          * 
         //! 2) 거리순 필터링 

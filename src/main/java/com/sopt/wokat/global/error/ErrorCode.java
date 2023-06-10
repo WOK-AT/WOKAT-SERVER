@@ -41,7 +41,8 @@ public enum ErrorCode {
 
 
     //! Kakao API
-    COORDS_TO_LOCATION_FAIL(500, "K001", "좌표 주소변환 실패")
+    COORDS_TO_LOCATION_FAIL(500, "K001", "좌표 주소변환 실패"),
+    LOCATION_TO_COORDS_FAIL(500, "K002", "주소 좌표변환 실패"),
     ;
 
     private final int status;

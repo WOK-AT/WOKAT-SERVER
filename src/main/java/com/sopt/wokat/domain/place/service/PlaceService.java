@@ -23,7 +23,7 @@ import com.sopt.wokat.domain.place.repository.PlaceRepository;
 import com.sopt.wokat.domain.place.repository.StationRepository;
 import com.sopt.wokat.global.error.ErrorCode;
 import com.sopt.wokat.global.error.exception.KakaoAPIRequestException;
-import com.sopt.wokat.infra.kakao.APICoordToLocation;
+import com.sopt.wokat.infra.kakao.CoordToLocation.APICoordToLocation;
 
 import lombok.RequiredArgsConstructor;
 
