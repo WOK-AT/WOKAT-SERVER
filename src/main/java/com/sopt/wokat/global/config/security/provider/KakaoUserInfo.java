@@ -6,9 +6,7 @@ import java.util.Map;
 // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api의 값들을 key로 설정해 가져오기 
 public class KakaoUserInfo implements Oauth2UserInfo {
 
-
     private Map<String, Object> attributes;
-
 
     public KakaoUserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;

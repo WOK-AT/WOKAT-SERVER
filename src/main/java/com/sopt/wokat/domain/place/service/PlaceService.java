@@ -1,23 +1,32 @@
 package com.sopt.wokat.domain.place.service;
 
-import com.sopt.wokat.domain.place.entity.Space;
-import com.sopt.wokat.domain.place.entity.SpaceInfo;
-import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
-import com.sopt.wokat.domain.place.repository.PlaceRepository;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.domain.place.dto.FilteringPlaceRequest;
+import com.sopt.wokat.domain.place.dto.FilteringPlaceResponse;
 import com.sopt.wokat.domain.place.dto.OnePlaceInfoResponse;
 import com.sopt.wokat.domain.place.dto.PostPlaceRequest;
 import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
+import com.sopt.wokat.domain.place.entity.Space;
+import com.sopt.wokat.domain.place.entity.SpaceInfo;
+import com.sopt.wokat.domain.place.entity.Station;
+import com.sopt.wokat.domain.place.exception.PlaceNotFoundException;
+import com.sopt.wokat.domain.place.repository.PlaceRepository;
+import com.sopt.wokat.domain.place.repository.StationRepository;
+import com.sopt.wokat.global.error.ErrorCode;
+import com.sopt.wokat.global.error.exception.KakaoAPIRequestException;
+import com.sopt.wokat.infra.kakao.CoordToLocation.APICoordToLocation;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -26,10 +35,30 @@ import com.sopt.wokat.domain.place.dto.PostPlaceResponse;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final StationRepository stationRepository;
+
+    @Autowired
+    private APICoordToLocation apiCoordToLocation;
     
-    public List<SpaceInfo> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
+    public List<FilteringPlaceResponse> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
+        String area;
         Space space = Space.fromValue(placeClass);
-        return placeRepository.findSpaceByProperties(space, filteringPlaceRequest);
+
+        List<Station> stations = stationRepository.findByName(filteringPlaceRequest.getStation());
+        CoordinateDTO stationCoord = new CoordinateDTO(stations.get(0).getLongitude(), 
+                    stations.get(0).getLatitude());
+
+        //! 역의 위경도 통해 지역 찾기 
+        try {
+            area = apiCoordToLocation.getAreaByCoordinates(
+                    stations.get(0).getLongitude(), stations.get(0).getLatitude());
+        } catch (URISyntaxException e){
+            throw new KakaoAPIRequestException(ErrorCode.COORDS_TO_LOCATION_FAIL); 
+        }
+
+        if (area == null) return new ArrayList<>();     //! 서울특별시 아닌 경우 
+        return placeRepository.findSpaceByProperties(space, area, filteringPlaceRequest.getStation(),
+                    stationCoord, filteringPlaceRequest);
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
