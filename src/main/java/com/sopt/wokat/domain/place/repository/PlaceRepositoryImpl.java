@@ -107,6 +107,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : sortedSpace) {
+            LOGGER.info(spaceInfo);
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
 
             placeReturnDTO.setPlace(spaceInfo.getName());
@@ -137,10 +138,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                     throw new KakaoAPIRequestException(ErrorCode.LOCATION_TO_COORDS_FAIL);
                 }
 
+                LOGGER.info("{}, {}", space1.getName(), space2.getName());
+                LOGGER.info("{}, {}", coordinate1, coordinate2);
                 //! 공간과 역의 도보거리 
                 int walkTime1;
                 int walkTime2;
-                
+
                 try {
                     walkTime1 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate1, space1.getName());
                     walkTime2 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate2, space1.getName());
