@@ -100,14 +100,13 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         
         query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         List<SpaceInfo> spaceList = mongoTemplate.find(query, SpaceInfo.class); 
-        LOGGER.info(spaceList);
+
         //! 거리순 정렬하기 
         List<SpaceInfo> sortedSpace = sortSpaceByDist(spaceList, station, stationCoord);
-        LOGGER.info(sortedSpace);
+
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : sortedSpace) {
-            LOGGER.info(spaceInfo);
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
 
             placeReturnDTO.setPlace(spaceInfo.getName());
@@ -137,9 +136,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 } catch (URISyntaxException e) {
                     throw new KakaoAPIRequestException(ErrorCode.LOCATION_TO_COORDS_FAIL);
                 }
-
-                LOGGER.info("{}, {}", space1.getName(), space2.getName());
-                LOGGER.info("{}, {}", coordinate1, coordinate2);
+                
                 //! 공간과 역의 도보거리 
                 int walkTime1;
                 int walkTime2;
