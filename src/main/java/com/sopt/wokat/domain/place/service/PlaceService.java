@@ -2,6 +2,8 @@ package com.sopt.wokat.domain.place.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,9 @@ public class PlaceService {
         String area;
         Space space = Space.fromValue(placeClass);
 
-        List<Station> stations = stationRepository.findByName(filteringPlaceRequest.getStation());
+        ///! 역명 decode하기 
+        String decodedStation = URLDecoder.decode(filteringPlaceRequest.getStation(), StandardCharsets.UTF_8);
+        List<Station> stations = stationRepository.findByName(decodedStation);
         CoordinateDTO stationCoord = new CoordinateDTO(stations.get(0).getLongitude(), 
                     stations.get(0).getLatitude());
 
