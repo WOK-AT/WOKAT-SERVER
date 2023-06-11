@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 public class FilteringPlaceResponse {
     
+    private String id;
     private String place;
     private Map<String, Object> distance;
     private String count;

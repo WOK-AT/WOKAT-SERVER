@@ -109,6 +109,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         for (SpaceInfo spaceInfo : sortedSpace) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
 
+            placeReturnDTO.setId(spaceInfo.getId());
             placeReturnDTO.setPlace(spaceInfo.getName());
             placeReturnDTO.setDistance(spaceInfo.getDistance());
             placeReturnDTO.setCount(spaceInfo.getHeadCount());
