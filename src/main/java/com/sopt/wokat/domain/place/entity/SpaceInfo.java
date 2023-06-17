@@ -80,7 +80,7 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "지번 주소")
     private String locationLotNumber;
 
-    @Field("space_headcount")
+    @Field("space_headCount")
     @Schema(description = "수용 인원수")
     @Builder.Default
     private String headCount = null;
