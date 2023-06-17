@@ -108,7 +108,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : sortedSpace) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
-
             placeReturnDTO.setId(spaceInfo.getId());
             placeReturnDTO.setPlace(spaceInfo.getName());
             placeReturnDTO.setDistance(spaceInfo.getDistance());
@@ -138,6 +137,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                     throw new KakaoAPIRequestException(ErrorCode.LOCATION_TO_COORDS_FAIL);
                 }
                 
+                LOGGER.info("{} {}", coordinate1, coordinate2);
                 //! 공간과 역의 도보거리 
                 int walkTime1;
                 int walkTime2;
@@ -145,13 +145,15 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 try {
                     walkTime1 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate1, space1.getName());
                     walkTime2 = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate2, space1.getName());
+                    LOGGER.info("{} {}", walkTime1, walkTime2);
                 } catch (URISyntaxException | JSONException e) {
                     throw new TmapAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
                 }
-                
+                    
                 int compareResult = Integer.compare(walkTime1, walkTime2);
-            
+                
                 return compareResult;
+                // return 1;
             }
         });
 
