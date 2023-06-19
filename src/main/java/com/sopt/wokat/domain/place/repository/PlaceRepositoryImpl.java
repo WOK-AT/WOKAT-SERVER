@@ -115,7 +115,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             placeReturnDTO.setHashtags(spaceInfo.getHashTags());
             placeReturnDTO.setLocation(spaceInfo.getLocationRoadName());
             placeReturnDTO.setImageURL(spaceInfo.getImageURLs().get(0));
-            placeReturnDTO.setWifi(spaceInfo.getWifi());
 
             spaceReturnList.add(placeReturnDTO);
         }
