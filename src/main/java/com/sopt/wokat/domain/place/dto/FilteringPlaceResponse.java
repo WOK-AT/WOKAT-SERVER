@@ -23,5 +23,6 @@ public class FilteringPlaceResponse {
     private List<String> hashtags;
     private String location;
     private String imageURL;
+    private Map<String, Object> wifi;
 
 }
