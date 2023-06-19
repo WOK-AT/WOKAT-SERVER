@@ -32,6 +32,7 @@ public class OnePlaceInfoResponse {
     private String location;
     private List<String> imageURLs;
     private Map<String, Object> distance;
+    private Map<String, Object> wifi;
     
     public static OnePlaceInfoResponse createOnePlaceInfoResponse (SpaceInfo spaceInfo) {
         return OnePlaceInfoResponse.builder()
@@ -54,6 +55,7 @@ public class OnePlaceInfoResponse {
                         spaceInfo.getHdmiScreen()
                     ))
                     .distance(spaceInfo.getDistance())
+                    .wifi(spaceInfo.getWifi())
                     .build();
     }
 
