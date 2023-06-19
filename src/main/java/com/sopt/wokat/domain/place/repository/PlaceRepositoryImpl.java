@@ -78,7 +78,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     public OnePlaceInfoResponse findByIdCustom(String id) throws PlaceNotFoundException {
         SpaceInfo spaceInfo = mongoTemplate.findById(id, SpaceInfo.class);
         if (spaceInfo == null) throw new PlaceNotFoundException();
-
+        LOGGER.info(spaceInfo);
         OnePlaceInfoResponse placeInfoResponse = OnePlaceInfoResponse.createOnePlaceInfoResponse(spaceInfo);
         return placeInfoResponse;
     }
