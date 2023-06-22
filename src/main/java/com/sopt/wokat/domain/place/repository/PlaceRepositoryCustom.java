@@ -20,7 +20,7 @@ public interface PlaceRepositoryCustom {
 
     OnePlaceInfoResponse findByIdCustom(String id) throws PlaceNotFoundException ;
     
-    List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, String station,
-            CoordinateDTO stationCoord, FilteringPlaceRequest filteringPlaceRequest);
+    List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, String station, 
+            Boolean isMainStation, CoordinateDTO stationCoord, FilteringPlaceRequest filteringPlaceRequest);
 
 }

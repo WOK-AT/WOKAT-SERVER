@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +61,19 @@ public class PlaceService {
             throw new KakaoAPIRequestException(ErrorCode.COORDS_TO_LOCATION_FAIL); 
         }
 
+        //! 역이 1~9호선에 속하는지 확인
+        Boolean isMainStation = isStationHasWalkDistance(stations);
+
         if (area == null) return new ArrayList<>();     //! 서울특별시 아닌 경우 
-        return placeRepository.findSpaceByProperties(space, area, filteringPlaceRequest.getStation(),
+        return placeRepository.findSpaceByProperties(space, area, filteringPlaceRequest.getStation(), isMainStation,
                     stationCoord, filteringPlaceRequest);
+    }
+
+    public Boolean isStationHasWalkDistance(List<Station> stations) {
+        String line = stations.get(0).getLine();
+
+        return Arrays.asList("01호선", "02호선", "03호선", "04호선", "05호선", "06호선", "07호선", "08호선", "09호선")
+                        .contains(line);
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
@@ -84,10 +95,9 @@ public class PlaceService {
     public String findPlaceLocation(String placeId, int isRoadName) {
         SpaceInfo foundPlace = placeRepository.findById(placeId)
                 .orElseThrow(PlaceNotFoundException::new);
-        //! 지번 주소일 경우
-        if(isRoadName == 0) return foundPlace.getLocationRoadName();
-        //! 도로명 주소일 경우
-        else return foundPlace.getLocationLotNumber();
+        String address = (isRoadName == 0) ? 
+                foundPlace.getLocationRoadName() : foundPlace.getLocationLotNumber();
+        return address;
     }
 
 }
