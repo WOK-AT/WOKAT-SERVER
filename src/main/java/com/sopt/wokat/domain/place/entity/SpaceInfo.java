@@ -119,6 +119,10 @@ public class SpaceInfo extends BaseEntity {
     @Schema(description = "S3 이미지 URL")
     private List<String> imageURLs;
 
+    @Field("station_distance")                      //! [역이름: 역까지 도보거리]
+    @Schema(description = "서울 자치구 별 지하철역~공간 도보거리")
+    private Map<String, Object> walkTime;
+
     public static SpaceInfo createSpaceInfo (PostPlaceRequest placeRequest) {
         SpaceInfo spaceInfo = SpaceInfo.builder()
                 .space(Space.fromValue(placeRequest.getSpaceClass().toString()))
