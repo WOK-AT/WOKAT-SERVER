@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,12 +105,51 @@ public class OnePlaceInfoResponse {
         List<String> daysOfWeek = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
         openDays.values().forEach(dayList -> dayList.sort(Comparator.comparingInt(daysOfWeek::indexOf)));
         closedDays.sort(Comparator.comparingInt(daysOfWeek::indexOf));
-        
-        if (!openDays.isEmpty()) result.put("open", openDays);
-        if (!closedDays.isEmpty()) result.put("closed", closedDays);
+
+        //! 운영시간 시간 순서대로 정렬 
+        List<String> sortedTimes = new ArrayList<>(openDays.keySet());
+        sortedTimes.sort((time1, time2) -> returnTimeOrder(time1, time2));
+
+        Map<String, List<String>> sortedOpenDays = new LinkedHashMap<>();
+        for (String time : sortedTimes) {
+            sortedOpenDays.put(time, openDays.get(time));
+        }
+
+        result.put("open", sortedOpenDays);
+        result.put("closed", closedDays);
 
         return result;
     }
+
+    private static int returnTimeOrder(String time1, String time2) {
+            String[] startTime1 = time1.split(" - ");
+            String[] startTime2 = time2.split(" - ");
+
+            int startHour1 = Integer.parseInt(startTime1[0].split(":")[0]);
+            int startHour2 = Integer.parseInt(startTime2[0].split(":")[0]);
+
+            int startMinute1 = Integer.parseInt(startTime1[0].split(":")[1]);
+            int startMinute2 = Integer.parseInt(startTime2[0].split(":")[1]);
+
+            int endHour1 = Integer.parseInt(startTime1[1].split(":")[0]);
+            int endHour2 = Integer.parseInt(startTime2[1].split(":")[0]);
+
+            int endMinute1 = Integer.parseInt(startTime1[1].split(":")[1]);
+            int endMinute2 = Integer.parseInt(startTime2[1].split(":")[1]);
+
+            if (startHour1 != startHour2) {
+                return Integer.compare(startHour1, startHour2);
+            } else if (startMinute1 != startMinute2) {
+                return Integer.compare(startMinute1, startMinute2);
+            } else if (endHour1 != endHour2) {
+                return Integer.compare(endHour1, endHour2);
+            } else {
+                return Integer.compare(endMinute1, endMinute2);
+            }
+    }
+
+
+
     /*
      *   {
 	 *		"contact": ["000-0000-0000"]
