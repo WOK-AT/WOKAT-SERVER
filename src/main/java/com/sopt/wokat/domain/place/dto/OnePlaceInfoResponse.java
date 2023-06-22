@@ -101,18 +101,23 @@ public class OnePlaceInfoResponse {
             }
         }
 
-        //! 요일 정렬
+        //? 요일묶음 내 요일 정렬
         List<String> daysOfWeek = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
         openDays.values().forEach(dayList -> dayList.sort(Comparator.comparingInt(daysOfWeek::indexOf)));
         closedDays.sort(Comparator.comparingInt(daysOfWeek::indexOf));
 
-        //! 운영시간 시간 순서대로 정렬 
-        List<String> sortedTimes = new ArrayList<>(openDays.keySet());
-        sortedTimes.sort((time1, time2) -> returnTimeOrder(time1, time2));
+        //? 운영시간 시간끼리 요일 정렬 
+        List<Map.Entry<String, List<String>>> sortedHours = new ArrayList<>(openDays.entrySet());
+
+        sortedHours.sort(Comparator.comparingInt(entry -> {
+            String day = entry.getValue().get(0);
+            String targetDays = "월화수목금토일";
+            return targetDays.indexOf(day);
+        }));
 
         Map<String, List<String>> sortedOpenDays = new LinkedHashMap<>();
-        for (String time : sortedTimes) {
-            sortedOpenDays.put(time, openDays.get(time));
+        for (Map.Entry<String, List<String>> entry : sortedHours) {
+            sortedOpenDays.put(entry.getKey(), entry.getValue());
         }
 
         result.put("open", sortedOpenDays);
@@ -121,6 +126,7 @@ public class OnePlaceInfoResponse {
         return result;
     }
 
+    //! 운영시간 정렬 (오픈시간 빠른 순서 -> 같은 경우, 마감시간 빠른 순서)
     private static int returnTimeOrder(String time1, String time2) {
             String[] startTime1 = time1.split(" - ");
             String[] startTime2 = time2.split(" - ");
