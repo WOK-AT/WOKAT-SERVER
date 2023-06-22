@@ -1,6 +1,8 @@
 package com.sopt.wokat.domain.place.dto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +90,7 @@ public class OnePlaceInfoResponse {
             if (value instanceof String) {
                 String time = (String) value;
 
-                if (time.equals("휴관")) closedDays.add(day);
+                if (time.equals("휴관") || time.contains("휴관")) closedDays.add(day);
                 else {
                     if (!openDays.containsKey(time)) {
                         openDays.put(time, new ArrayList<>());
@@ -98,6 +100,11 @@ public class OnePlaceInfoResponse {
             }
         }
 
+        //! 요일 정렬
+        List<String> daysOfWeek = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
+        openDays.values().forEach(dayList -> dayList.sort(Comparator.comparingInt(daysOfWeek::indexOf)));
+        closedDays.sort(Comparator.comparingInt(daysOfWeek::indexOf));
+        
         if (!openDays.isEmpty()) result.put("open", openDays);
         if (!closedDays.isEmpty()) result.put("closed", closedDays);
 
