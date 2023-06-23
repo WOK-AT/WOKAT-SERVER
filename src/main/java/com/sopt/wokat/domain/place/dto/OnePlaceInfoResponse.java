@@ -29,7 +29,7 @@ public class OnePlaceInfoResponse {
     private String count;
     private String bookingURL;
     private List<String> hashtags;
-    private List<String> introduce;
+    private String introduce;
     private Map<String, Object> operationHours;
     private Map<String, Object> information;
     private String location;
