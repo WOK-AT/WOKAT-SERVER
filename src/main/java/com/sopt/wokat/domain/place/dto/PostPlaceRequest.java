@@ -24,7 +24,7 @@ public class PostPlaceRequest {
     private String locationRoadName;
     private String locationLotNumber;
     private String headCount;
-    private List<String> introduction;
+    private String introduction;
     private List<String> contact;
     private List<String> hashTags; 
     private Map<String, Object> wifi;

@@ -88,7 +88,7 @@ public class SpaceInfo extends BaseEntity {
     @Field("space_introduce")
     @Schema(description = "공간 소개")
     @Builder.Default
-    private List<String> introduction = null;
+    private String introduction = null;
 
     @Field("space_contact")
     @Schema(description = "전화번호")
