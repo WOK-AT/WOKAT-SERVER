@@ -159,7 +159,7 @@ public class OnePlaceInfoResponse {
     /*
      *   {
 	 *		"contact": ["000-0000-0000"]
-	 *		"homepage": "www.wokat.com",
+	 *		"homepageURL": "www.wokat.com",
 	 *		"wi-fi": {
 	 *			"ID": ["KT_GIGA_2G_Wave3_B829"],
 	 *			"PW": ["123456789"]
@@ -182,7 +182,7 @@ public class OnePlaceInfoResponse {
 
         Map<String, Object> infoHashMap = makeHashMap(
     "contact", contact,
-            "homepage", homepageURL,
+            "homepageURL", homepageURL,
            // "socket", socket != null && socket.equals("true") ? true : (socket == null ? null : false),
             "socket", socket != null ? socket : false,
           // "parking", parkingLot != null && parkingLot.equals("true") ? true : (socket == null ? null : false),
