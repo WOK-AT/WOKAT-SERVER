@@ -52,7 +52,7 @@ public class SpaceInfo extends BaseEntity {
     @Builder.Default
     private String isFree = null;
 
-    @Field("booking_url")
+    @Field("homepage_url")
     @Schema(description = "대관 신청 링크")
     @Builder.Default
     private String bookingURL = null;
