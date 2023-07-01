@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -67,7 +68,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         mongoTemplate.save(spaceInfo);
 
         if (multipartFile != null) {
-            List<String> resultURLs = s3PlaceUploader.uploadS3ProfileImage(placeRequest.getSpaceClass().toString(), multipartFile);
+            List<String> resultURLs = s3PlaceUploader
+                            .uploadS3ProfileImage(placeRequest.getSpaceClass().toString(), multipartFile);
             spaceInfo.setImageURLs(resultURLs);
 
             mongoTemplate.save(spaceInfo);
@@ -100,13 +102,16 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         if (isMainStation) {
             pipeline.add(Aggregation.project()
                 .and("station_distance."+station).as("walkTimeValue")  //? 도보거리 정렬 
-                .andInclude("_id", "space_name", "space_distance", "space_headCount", "space_hashTag", "space_roadName", "space_images")
+                .andInclude("_id", "space_name", "space_distance", 
+                    "space_headCount", "space_hashTag", "space_roadName", "space_images")
             );
             pipeline.add(Aggregation.sort(Sort.Direction.ASC, "walkTimeValue"));
 
-        } else {    //! 3-2) 그 외의 노선인 경우 도보거리 api 요청 후 정렬
+        //! 3-2) 그 외의 노선인 경우 도보거리 api 요청 후 정렬
+        } else {    
             pipeline.add(Aggregation.project()
-                .andInclude("_id", "space_name", "space_distance", "space_headCount", "space_hashTag", "space_roadName", "space_images")
+                .andInclude("_id", "space_name", "space_distance", "space_headCount", 
+                    "space_hashTag", "space_roadName", "space_images")
             );
             pipeline.add(Aggregation.sort(Sort.Direction.ASC, "space_name"));
         }
@@ -124,7 +129,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         
         //! 1~9 이외의 노선인 경우 따로 API 호출해서 정렬 
         if (!isMainStation) {
-            List<SpaceInfo> sortedSpace = sortSpaceByDist2(spaceList, station, stationCoord);
+            List<SpaceInfo> sortedSpace = sortSpaceByDist(spaceList, station, stationCoord);
             spaceList = sortedSpace;
         }
 
@@ -132,9 +137,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : spaceList) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
+            String walkingDist = getWalkingDist(station, spaceInfo.getDistance());
+            LOGGER.info(walkingDist);
+
             placeReturnDTO.setId(spaceInfo.getId());
             placeReturnDTO.setPlace(spaceInfo.getName());
-            placeReturnDTO.setDistance(spaceInfo.getDistance());
+            placeReturnDTO.setDistance(walkingDist);
             placeReturnDTO.setCount(spaceInfo.getHeadCount());
             placeReturnDTO.setHashtags(spaceInfo.getHashTags());
             placeReturnDTO.setLocation(spaceInfo.getLocationRoadName());
@@ -143,23 +151,69 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             spaceReturnList.add(placeReturnDTO);
         }
 
-
         return spaceReturnList;
     }
 
     //* Tmap API 활용해 도보거리 측정 
-    public List<SpaceInfo> sortSpaceByDist2(List<SpaceInfo> spaceList, String station, CoordinateDTO stationCoord) {
-    return spaceList.stream()
-            .sorted(Comparator.comparingInt(space -> {
-                try {
-                    CoordinateDTO coordinate = apiLocationToCoord.getCoordByLocation(space.getLocationRoadName());
-                    int walkTime = apiGetWalkingDist.getWalkingDistance(stationCoord, station, coordinate, space.getName());
-                    return walkTime;
-                } catch (URISyntaxException | JSONException e) {
-                    throw new TmapAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
+    private List<SpaceInfo> sortSpaceByDist(List<SpaceInfo> spaceList, String station, CoordinateDTO stationCoord) {
+        return spaceList.stream()
+                .sorted(Comparator.comparingInt(space -> {
+                    try {
+                        CoordinateDTO coordinate = apiLocationToCoord
+                                .getCoordByLocation(space.getLocationRoadName());
+                        int walkTime = apiGetWalkingDist
+                                .getWalkingDistance(stationCoord, station, coordinate, space.getName());
+                        return walkTime;
+                    } catch (URISyntaxException | JSONException e) {
+                        throw new TmapAPIRequestException(ErrorCode.GET_WALK_DISTANCE_FAIL);
+                    }
+                }))
+                .collect(Collectors.toList());
+    }
+
+    //* 검색한 역에 해당하는 도보거리 반환 or 최소 도보거리 반환
+    private String getWalkingDist(String station, Map<String, Object> distances) {
+        String result;
+        String fullStation = station + "역";
+
+        String stationName = fullStation;
+
+        //! 1) 검색역에 포함되는 도보거리 존재하는 경우 -> 해당 도보거리 반환 
+        if (distances.containsKey(fullStation)) {
+            result = stationName.concat(" ").concat((String) distances.get(fullStation));
+        //! 2) 존재하지 않는 경우 -> 최소 도보거리 반환 
+        } else {
+            int minDistance = Integer.MAX_VALUE;
+            String minDistanceValue = null;
+
+            for (Map.Entry<String, Object> entry : distances.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if (value instanceof String) {
+                    String distanceValue = (String) value;
+                    int distance = extractDistanceValue(distanceValue);
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        minDistanceValue = distanceValue;
+                        stationName = key;
+                    }
                 }
-            }))
-            .collect(Collectors.toList());
+            }
+
+            result = stationName.concat(" ").concat(minDistanceValue);
+        }
+
+        return result;
+    }
+
+    private static int extractDistanceValue(String distanceValue) {
+        String[] parts = distanceValue.split(" ");
+        int partLength = parts.length;
+
+        String minuteString = parts[partLength - 1].substring(0, parts[partLength - 1].length() - 1);
+        return Integer.parseInt(minuteString);
     }
 
 }
