@@ -34,9 +34,9 @@ public class OnePlaceInfoResponse {
     private Map<String, Object> information;
     private String location;
     private List<String> imageURLs;
-    private Map<String, Object> distance;
+    private String distance;
     
-    public static OnePlaceInfoResponse createOnePlaceInfoResponse (SpaceInfo spaceInfo) {
+    public static OnePlaceInfoResponse createOnePlaceInfoResponse (SpaceInfo spaceInfo, String walkDistance) {
         return OnePlaceInfoResponse.builder()
                     .id(spaceInfo.getId())
                     .category(spaceInfo.getSpace().getValue())
@@ -56,7 +56,7 @@ public class OnePlaceInfoResponse {
                         spaceInfo.getParkingLot(),
                         spaceInfo.getHdmiScreen()
                     ))
-                    .distance(spaceInfo.getDistance())
+                    .distance(walkDistance)
                     .build();
     }
 
@@ -128,33 +128,31 @@ public class OnePlaceInfoResponse {
 
     //! 운영시간 정렬 (오픈시간 빠른 순서 -> 같은 경우, 마감시간 빠른 순서)
     private static int returnTimeOrder(String time1, String time2) {
-            String[] startTime1 = time1.split(" - ");
-            String[] startTime2 = time2.split(" - ");
+        String[] startTime1 = time1.split(" - ");
+        String[] startTime2 = time2.split(" - ");
 
-            int startHour1 = Integer.parseInt(startTime1[0].split(":")[0]);
-            int startHour2 = Integer.parseInt(startTime2[0].split(":")[0]);
+        int startHour1 = Integer.parseInt(startTime1[0].split(":")[0]);
+        int startHour2 = Integer.parseInt(startTime2[0].split(":")[0]);
 
-            int startMinute1 = Integer.parseInt(startTime1[0].split(":")[1]);
-            int startMinute2 = Integer.parseInt(startTime2[0].split(":")[1]);
+        int startMinute1 = Integer.parseInt(startTime1[0].split(":")[1]);
+        int startMinute2 = Integer.parseInt(startTime2[0].split(":")[1]);
 
-            int endHour1 = Integer.parseInt(startTime1[1].split(":")[0]);
-            int endHour2 = Integer.parseInt(startTime2[1].split(":")[0]);
+        int endHour1 = Integer.parseInt(startTime1[1].split(":")[0]);
+        int endHour2 = Integer.parseInt(startTime2[1].split(":")[0]);
 
-            int endMinute1 = Integer.parseInt(startTime1[1].split(":")[1]);
-            int endMinute2 = Integer.parseInt(startTime2[1].split(":")[1]);
+        int endMinute1 = Integer.parseInt(startTime1[1].split(":")[1]);
+        int endMinute2 = Integer.parseInt(startTime2[1].split(":")[1]);
 
-            if (startHour1 != startHour2) {
-                return Integer.compare(startHour1, startHour2);
-            } else if (startMinute1 != startMinute2) {
-                return Integer.compare(startMinute1, startMinute2);
-            } else if (endHour1 != endHour2) {
-                return Integer.compare(endHour1, endHour2);
-            } else {
-                return Integer.compare(endMinute1, endMinute2);
-            }
+        if (startHour1 != startHour2) {
+            return Integer.compare(startHour1, startHour2);
+        } else if (startMinute1 != startMinute2) {
+            return Integer.compare(startMinute1, startMinute2);
+        } else if (endHour1 != endHour2) {
+            return Integer.compare(endHour1, endHour2);
+        } else {
+            return Integer.compare(endMinute1, endMinute2);
+        }
     }
-
-
 
     /*
      *   {
@@ -178,7 +176,6 @@ public class OnePlaceInfoResponse {
                 "PW", wiFiMap.get("PW")
             );
         }
-
 
         Map<String, Object> infoHashMap = makeHashMap(
     "contact", contact,

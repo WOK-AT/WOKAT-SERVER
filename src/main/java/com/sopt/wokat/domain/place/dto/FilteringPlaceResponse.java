@@ -18,7 +18,7 @@ public class FilteringPlaceResponse {
     
     private String id;
     private String place;
-    private Map<String, Object> distance;
+    private String distance;
     private String count;
     private List<String> hashtags;
     private String location;
