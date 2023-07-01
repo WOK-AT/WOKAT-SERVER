@@ -73,7 +73,7 @@ public class PlaceService {
         String line = stations.get(0).getLine();
 
         return Arrays.asList("01호선", "02호선", "03호선", "04호선", "05호선", "06호선", "07호선", "08호선", "09호선")
-                        .contains(line);
+                    .contains(line);
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
@@ -87,16 +87,16 @@ public class PlaceService {
         return placeResponse;
     }
 
-    public OnePlaceInfoResponse findPlaceInfo(String placeId) {
-        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeId);
+    public OnePlaceInfoResponse findPlaceInfo(String placeId, String station) {
+        OnePlaceInfoResponse placeInfoResponse = placeRepository.findByIdCustom(placeId, station);
         return placeInfoResponse;
     }
 
     public String findPlaceLocation(String placeId, int isRoadName) {
         SpaceInfo foundPlace = placeRepository.findById(placeId)
-                .orElseThrow(PlaceNotFoundException::new);
+                    .orElseThrow(PlaceNotFoundException::new);
         String address = (isRoadName == 0) ? 
-                foundPlace.getLocationRoadName() : foundPlace.getLocationLotNumber();
+                    foundPlace.getLocationRoadName() : foundPlace.getLocationLotNumber();
         return address;
     }
 

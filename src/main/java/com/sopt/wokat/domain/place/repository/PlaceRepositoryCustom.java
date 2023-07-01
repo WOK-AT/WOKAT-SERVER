@@ -18,7 +18,7 @@ public interface PlaceRepositoryCustom {
     
     SpaceInfo savePlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException;
 
-    OnePlaceInfoResponse findByIdCustom(String id) throws PlaceNotFoundException ;
+    OnePlaceInfoResponse findByIdCustom(String id, String station) throws PlaceNotFoundException ;
     
     List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, String station, 
             Boolean isMainStation, CoordinateDTO stationCoord, FilteringPlaceRequest filteringPlaceRequest);

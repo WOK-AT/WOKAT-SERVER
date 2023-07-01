@@ -79,11 +79,13 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public OnePlaceInfoResponse findByIdCustom(String id) throws PlaceNotFoundException {
+    public OnePlaceInfoResponse findByIdCustom(String id, String station) throws PlaceNotFoundException {
         SpaceInfo spaceInfo = mongoTemplate.findById(id, SpaceInfo.class);
         if (spaceInfo == null) throw new PlaceNotFoundException();
 
-        OnePlaceInfoResponse placeInfoResponse = OnePlaceInfoResponse.createOnePlaceInfoResponse(spaceInfo);
+        String walkDistance = getWalkingDist(station, spaceInfo.getDistance());
+
+        OnePlaceInfoResponse placeInfoResponse = OnePlaceInfoResponse.createOnePlaceInfoResponse(spaceInfo, walkDistance);
         return placeInfoResponse;
     }
 
