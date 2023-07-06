@@ -141,8 +141,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         for (SpaceInfo spaceInfo : spaceList) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
             String walkingDist = getWalkingDist(station, spaceInfo.getDistance());
-            String spaceImage;
-            LOGGER.info(walkingDist);
+            String spaceImage = (spaceInfo.getImageURLs().size() == 0) ?
+                    null : spaceInfo.getImageURLs().get(0);
 
             placeReturnDTO.setId(spaceInfo.getId());
             placeReturnDTO.setPlace(spaceInfo.getName());
@@ -150,12 +150,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             placeReturnDTO.setCount(spaceInfo.getHeadCount());
             placeReturnDTO.setHashtags(spaceInfo.getHashTags());
             placeReturnDTO.setLocation(spaceInfo.getLocationRoadName());
-            
-            if (spaceInfo.getImageURLs().size() == 0) {
-                spaceImage = null;
-            } else {
-                spaceImage = spaceInfo.getImageURLs().get(0);
-            }
             placeReturnDTO.setImageURL(spaceImage);
 
             spaceReturnList.add(placeReturnDTO);
