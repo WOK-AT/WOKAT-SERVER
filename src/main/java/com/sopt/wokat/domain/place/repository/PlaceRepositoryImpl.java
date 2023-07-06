@@ -135,11 +135,13 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             spaceList = sortedSpace;
         }
 
+        LOGGER.info(spaceList);
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : spaceList) {
             FilteringPlaceResponse placeReturnDTO = new FilteringPlaceResponse();
             String walkingDist = getWalkingDist(station, spaceInfo.getDistance());
+            String spaceImage;
             LOGGER.info(walkingDist);
 
             placeReturnDTO.setId(spaceInfo.getId());
@@ -148,7 +150,13 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             placeReturnDTO.setCount(spaceInfo.getHeadCount());
             placeReturnDTO.setHashtags(spaceInfo.getHashTags());
             placeReturnDTO.setLocation(spaceInfo.getLocationRoadName());
-            placeReturnDTO.setImageURL(spaceInfo.getImageURLs().get(0));
+            
+            if (spaceInfo.getImageURLs().size() == 0) {
+                spaceImage = null;
+            } else {
+                spaceImage = spaceInfo.getImageURLs().get(0);
+            }
+            placeReturnDTO.setImageURL(spaceImage);
 
             spaceReturnList.add(placeReturnDTO);
         }
