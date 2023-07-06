@@ -135,7 +135,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             spaceList = sortedSpace;
         }
 
-        LOGGER.info(spaceList);
         //! DTO 넣기
         List<FilteringPlaceResponse> spaceReturnList = new ArrayList<>();
         for (SpaceInfo spaceInfo : spaceList) {

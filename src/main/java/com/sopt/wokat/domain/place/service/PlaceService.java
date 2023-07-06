@@ -52,7 +52,7 @@ public class PlaceService {
         List<Station> stations = stationRepository.findByName(decodedStation);
         CoordinateDTO stationCoord = new CoordinateDTO(stations.get(0).getLongitude(), 
                     stations.get(0).getLatitude());
-
+        
         //! 역의 위경도 통해 지역 찾기 
         try {
             area = apiCoordToLocation.getAreaByCoordinates(
