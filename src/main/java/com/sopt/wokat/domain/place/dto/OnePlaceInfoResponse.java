@@ -61,7 +61,12 @@ public class OnePlaceInfoResponse {
     }
 
     public static List<String> hashTags(List<String> hashtags) {
-        List<String> result = hashtags.get(0).equals("") ? new ArrayList<>() : hashtags;
+        List<String> result;
+        if (hashtags.size() != 0) {
+            result = hashtags.get(0).equals("") ? new ArrayList<>() : hashtags;
+        } else {
+            result = new ArrayList<>();
+        }
         return result;
     }
     /*
