@@ -125,6 +125,10 @@ public class OnePlaceInfoResponse {
             sortedOpenDays.put(entry.getKey(), entry.getValue());
         }
 
+        if (closedDays.size() == 0) {
+            closedDays.add("연중무휴");
+        }
+
         result.put("open", sortedOpenDays);
         result.put("closed", closedDays);
 
