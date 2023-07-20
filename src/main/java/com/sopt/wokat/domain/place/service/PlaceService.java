@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,11 +70,18 @@ public class PlaceService {
                     stationCoord, filteringPlaceRequest);
     }
 
+    /*
+     * 홍대입구 -> 02호선, 경의선, 공항철도, ... 
+     * [Station(id= ..., line=02호선, name=홍대입구, ...), Station(id=.., line=경의선, name=홍대입구, ...), ... ] 
+     * 처럼 여러개의 역 있는 경우, 01~09호선 하나라도 포함하는지 
+     */
     public Boolean isStationHasWalkDistance(List<Station> stations) {
-        String line = stations.get(0).getLine();
+        String[] targetLines = {"01호선", "02호선", "03호선", "04호선", "05호선", "06호선", "07호선", "08호선", "09호선"};
+        boolean isLineIncluded = stations.stream().anyMatch(station -> 
+                                    Stream.of(targetLines).anyMatch(targetLine -> 
+                                        station.getLine().equals(targetLine)));
 
-        return Arrays.asList("01호선", "02호선", "03호선", "04호선", "05호선", "06호선", "07호선", "08호선", "09호선")
-                    .contains(line);
+        return isLineIncluded;
     }
 
     public PostPlaceResponse postPlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {

@@ -93,7 +93,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     public List<FilteringPlaceResponse> findSpaceByProperties(Space space, String area, String station,
                 Boolean isMainStation, CoordinateDTO stationCoord, FilteringPlaceRequest filteringPlaceRequest) {
         List<AggregationOperation> pipeline = new ArrayList<>();
-
+        LOGGER.info(isMainStation + " : " + station);
         //! 1) 카페/무료회의룸/무료공간 필터링
         pipeline.add(Aggregation.match(Criteria.where("space").is(space)));
 
