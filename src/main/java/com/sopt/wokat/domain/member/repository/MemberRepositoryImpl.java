@@ -21,15 +21,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
-    @Autowired
-    private S3ProfileUploader downlaodFileS3Uploader;
-
-    public MemberRepositoryImpl(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
+    private final S3ProfileUploader downlaodFileS3Uploader;
 
     @Override
     public Member setProfileImage(OauthResponse oauthResponse) throws IOException {

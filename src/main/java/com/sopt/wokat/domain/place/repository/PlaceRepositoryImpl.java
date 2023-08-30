@@ -46,13 +46,13 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
-    private S3PlaceUploader s3PlaceUploader;
+    private final S3PlaceUploader s3PlaceUploader;
 
-    private APILocationToCoord apiLocationToCoord;
+    private final APILocationToCoord apiLocationToCoord;
 
-    private APIGetWalkingDist apiGetWalkingDist;
+    private final APIGetWalkingDist apiGetWalkingDist;
 
     @Override
     public SpaceInfo savePlace(List<MultipartFile> multipartFile, PostPlaceRequest placeRequest) throws IOException {
