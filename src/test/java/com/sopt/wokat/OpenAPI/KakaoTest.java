@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.global.error.ErrorCode;
@@ -16,6 +17,7 @@ import com.sopt.wokat.infra.kakao.CoordToLocation.APICoordToLocation;
 import com.sopt.wokat.infra.kakao.LocationToCoord.APILocationToCoord;
 
 @SpringBootTest
+@Transactional
 public class KakaoTest {
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());

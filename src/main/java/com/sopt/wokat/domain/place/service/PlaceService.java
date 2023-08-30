@@ -39,10 +39,10 @@ import lombok.RequiredArgsConstructor;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
-    private final StationRepository stationRepository;
 
-    @Autowired
-    private APICoordToLocation apiCoordToLocation;
+    private final StationRepository stationRepository;
+    
+    private final APICoordToLocation apiCoordToLocation;
     
     public List<FilteringPlaceResponse> filteringPlace(String placeClass, FilteringPlaceRequest filteringPlaceRequest) {
         String area;

@@ -10,11 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sopt.wokat.domain.place.entity.Station;
 import com.sopt.wokat.domain.place.repository.StationRepository;
 
 @SpringBootTest
+@Transactional
 public class StationTest {
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());

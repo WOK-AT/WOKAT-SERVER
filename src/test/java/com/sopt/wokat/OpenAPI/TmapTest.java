@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sopt.wokat.domain.place.dto.CoordinateDTO;
 import com.sopt.wokat.global.error.ErrorCode;
@@ -16,6 +17,7 @@ import com.sopt.wokat.global.error.exception.TmapAPIRequestException;
 import com.sopt.wokat.infra.tmap.WalkingDistance.APIGetWalkingDist;
 
 @SpringBootTest
+@Transactional
 public class TmapTest {
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
