@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 @SpringBootApplication
 public class WokatApplication {
 
+	
 	@PostConstruct
 	public void started() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
